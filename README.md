@@ -1,2 +1,2 @@
 # AGH-DP-OAuth
-OAuth2 implementation for Design Patterns course on AGH University of Science and Technology.
+OAuth2 implementation for Design Patterns course at AGH University of Science and Technology.
