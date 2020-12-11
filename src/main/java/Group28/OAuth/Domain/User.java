@@ -8,7 +8,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "Users")
-class User {
+public class User {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     @Column(unique = true, name = "user_id")
