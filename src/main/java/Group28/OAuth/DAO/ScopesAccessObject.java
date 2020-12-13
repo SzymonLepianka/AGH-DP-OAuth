@@ -33,9 +33,12 @@ public class ScopesAccessObject implements IDataBaseAccessObject<Scope>{
     @Override
     public Scope readById(Long id) throws SQLException {
         Statement statement = this.connection.createStatement();
-        ResultSet result = statement.executeQuery(String.format("SELECT * FROM scopes WHERE scope_id = %f", id));
-        Scope scope = createScopeFromResult(result);
-        return scope;
+        ResultSet result = statement.executeQuery(String.format("SELECT * FROM scopes WHERE scope_id = %s", id));
+        if(result.next()) {
+            Scope scope = createScopeFromResult(result);
+            return scope;
+        }
+        return null;
     }
 
     @Override

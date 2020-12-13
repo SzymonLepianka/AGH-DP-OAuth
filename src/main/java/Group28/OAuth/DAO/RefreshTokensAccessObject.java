@@ -38,9 +38,12 @@ public class RefreshTokensAccessObject implements IDataBaseAccessObject<RefreshT
     @Override
     public RefreshToken readById(Long id) throws SQLException {
         Statement statement = this.connection.createStatement();
-        ResultSet result = statement.executeQuery(String.format("select * from refresh_tokens where refresh_token_id=%f", id));
-        RefreshToken refreshToken = createRefreshTokenFromResult(result);
-        return  refreshToken;
+        ResultSet result = statement.executeQuery(String.format("select * from refresh_tokens where refresh_token_id=%s", id));
+        if(result.next()) {
+            RefreshToken refreshToken = createRefreshTokenFromResult(result);
+            return refreshToken;
+        }
+        return null;
     }
 
     @Override

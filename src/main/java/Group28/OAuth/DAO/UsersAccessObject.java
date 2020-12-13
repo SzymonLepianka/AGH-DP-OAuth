@@ -41,9 +41,12 @@ public class UsersAccessObject implements IDataBaseAccessObject<User> {
     @Override
     public User readById(Long id) throws SQLException {
         Statement statement = this.connection.createStatement();
-        ResultSet result = statement.executeQuery(String.format("select * from users where user_id=%f", id));
-        User user = createUserFromResult(result);
-        return  user;
+        ResultSet result = statement.executeQuery(String.format("select * from users where user_id=%s", id));
+        if (result.next()){
+            User user = createUserFromResult(result);
+            return user;
+        }
+        return null;
     }
 
     @Override

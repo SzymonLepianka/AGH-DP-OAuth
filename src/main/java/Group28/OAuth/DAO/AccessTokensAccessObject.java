@@ -44,9 +44,12 @@ public class AccessTokensAccessObject implements IDataBaseAccessObject<AccessTok
     @Override
     public AccessToken readById(Long id) throws SQLException {
         Statement statement = this.connection.createStatement();
-        ResultSet result = statement.executeQuery(String.format("select * from access_tokens where access_token_id=%f", id));
-        AccessToken accessToken = createAccessTokenFromResult(result);
-        return  accessToken;
+        ResultSet result = statement.executeQuery(String.format("select * from access_tokens where access_token_id=%s", id));
+        if(result.next()) {
+            AccessToken accessToken = createAccessTokenFromResult(result);
+            return accessToken;
+        }
+        return null;
     }
 
     @Override

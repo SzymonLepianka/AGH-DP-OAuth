@@ -43,9 +43,12 @@ public class AuthCodesAccessObject implements IDataBaseAccessObject<AuthCode>{
     @Override
     public AuthCode readById(Long id) throws SQLException {
         Statement statement = this.connection.createStatement();
-        ResultSet result = statement.executeQuery(String.format("SELECT * from auth_codes where auth_code_id=%f", id));
-        AuthCode authCode = createAuthCodeFromResult(result);
-        return authCode;
+        ResultSet result = statement.executeQuery(String.format("SELECT * from auth_codes where auth_code_id=%s", id));
+        if (result.next()){
+            AuthCode authCode = createAuthCodeFromResult(result);
+            return authCode;
+        }
+        return null;
     }
 
     @Override

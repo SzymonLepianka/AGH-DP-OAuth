@@ -39,15 +39,18 @@ public class AppsAccessObject implements IDataBaseAccessObject<ClientApp>{
     @Override
     public ClientApp readById(Long id) throws SQLException {
         Statement statement = this.connection.createStatement();
-        ResultSet result = statement.executeQuery(String.format("select * from client_apps where client_app_id = %f", id));
-        ClientApp clinetApp = createClientAppFromResult(result);
-        return clinetApp;
+        ResultSet result = statement.executeQuery(String.format("select * from client_apps where client_app_id = %s", id));
+        if (result.next()) {
+            ClientApp clinetApp = createClientAppFromResult(result);
+            return clinetApp;
+        }
+        return null;
     }
 
 
     @Override
     public ClientApp create(ClientApp object) throws SQLException {
-        String query = "insert into clients_apps (app_seret, redirectedurl, age_restriction, user_id)" + "values (?,?,?,?)";
+        String query = "insert into clients_apps (app_secret, redirecturl, age_restriction, user_id)" + "values (?,?,?,?)";
         PreparedStatement preparedStmt = this.connection.prepareStatement(query);
         preparedStmt.setLong(1, object.getAppSecret());
         preparedStmt.setString(2,object.getRedirectURL());
@@ -59,7 +62,7 @@ public class AppsAccessObject implements IDataBaseAccessObject<ClientApp>{
 
     @Override
     public ClientApp update(ClientApp object) throws SQLException {
-        String query = "update client_apps set app_secret=?, redirectedurl=?, age_restriction=?, user_id where client_app_id=?";
+        String query = "update client_apps set app_secret=?, redirecturl=?, age_restriction=?, user_id where client_app_id=?";
         PreparedStatement preparedStmt = this.connection.prepareStatement(query);
         preparedStmt.setLong(1,object.getAppSecret());
         preparedStmt.setString(2, object.getRedirectURL());
