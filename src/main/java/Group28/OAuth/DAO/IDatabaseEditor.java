@@ -12,5 +12,6 @@ public interface IDatabaseEditor {
     IDataBaseAccessObject<AuthCode> getAuthCodesAccessObject();
     IDataBaseAccessObject<AccessToken> getAccessTokensAccessObject();
     IDataBaseAccessObject<RefreshToken> getRefreshTokensAccessObject();
+    IDataBaseAccessObject<Scope> getScopesAccessObject();
 
 }

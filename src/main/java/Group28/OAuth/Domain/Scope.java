@@ -14,8 +14,7 @@ public class Scope {
     @Column(unique = true)
     private String name;
 
-    @OneToMany
-    @JoinColumn(name = "permission_id")
+    @OneToMany(mappedBy = "scope", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Permission> permissions;
 
     public Long getId() {

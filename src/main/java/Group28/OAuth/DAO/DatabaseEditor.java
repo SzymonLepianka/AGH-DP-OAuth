@@ -33,6 +33,8 @@ public class DatabaseEditor implements IDatabaseEditor {
 
     private IDataBaseAccessObject<RefreshToken> refreshTokensAccessObject;
 
+    private IDataBaseAccessObject<Scope> scopesAccessObject;
+
     private static DatabaseEditor instance = null;
 
     private DatabaseEditor() throws SQLException {
@@ -43,6 +45,7 @@ public class DatabaseEditor implements IDatabaseEditor {
         this.authCodesAccessObject = new AuthCodesAccessObject(this.databaseConnection);
         this.permissionsAccessObject = new PermissionsAccessObject(this.databaseConnection);
         this.clientAppsAccessObject = new AppsAccessObject(this.databaseConnection);
+        this.scopesAccessObject = new ScopesAccessObject(this.databaseConnection);
     }
 
     public static IDatabaseEditor getInstance() throws SQLException {
@@ -102,4 +105,11 @@ public class DatabaseEditor implements IDatabaseEditor {
     public IDataBaseAccessObject<RefreshToken> getRefreshTokensAccessObject() {
         return this.refreshTokensAccessObject;
     }
+
+    @Override
+    public IDataBaseAccessObject<Scope> getScopesAccessObject() {
+        return this.scopesAccessObject;
+    }
+
+
 }
