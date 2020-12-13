@@ -1,13 +1,13 @@
 package Group28.OAuth.Domain;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.sql.Date;
 
 @Entity
 @Table(name = "AuthCodes")
 public class AuthCode {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(unique = true, name = "authCode_id")
     private Long id;
 
