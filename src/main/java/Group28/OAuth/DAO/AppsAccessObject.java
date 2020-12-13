@@ -40,15 +40,17 @@ public class AppsAccessObject implements IDataBaseAccessObject<ClientApp>{
     public ClientApp readById(Long id) throws SQLException {
         Statement statement = this.connection.createStatement();
         ResultSet result = statement.executeQuery(String.format("select * from client_apps where client_app_id = %s", id));
-        result.next();
-        ClientApp clinetApp = createClientAppFromResult(result);
-        return clinetApp;
+        if (result.next()) {
+            ClientApp clinetApp = createClientAppFromResult(result);
+            return clinetApp;
+        }
+        return null;
     }
 
 
     @Override
     public ClientApp create(ClientApp object) throws SQLException {
-        String query = "insert into client_apps (app_secret, redirecturl, age_restriction, user_id)" + "values (?,?,?,?)";
+        String query = "insert into clients_apps (app_secret, redirecturl, age_restriction, user_id)" + "values (?,?,?,?)";
         PreparedStatement preparedStmt = this.connection.prepareStatement(query);
         preparedStmt.setLong(1, object.getAppSecret());
         preparedStmt.setString(2,object.getRedirectURL());

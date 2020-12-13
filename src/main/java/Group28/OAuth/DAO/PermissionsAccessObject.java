@@ -38,9 +38,12 @@ public class PermissionsAccessObject implements IDataBaseAccessObject<Permission
     @Override
     public Permission readById(Long id) throws SQLException {
         Statement statement = this.connection.createStatement();
-        ResultSet result = statement.executeQuery(String.format("SELECT * FROM permissions WHERE permission_id=%f", id));
-        Permission permission = createPermissionFromResult(result);
-        return permission;
+        ResultSet result = statement.executeQuery(String.format("SELECT * FROM permissions WHERE permission_id=%s", id));
+        if (result.next()) {
+            Permission permission = createPermissionFromResult(result);
+            return permission;
+        }
+        return null;
     }
 
     @Override
