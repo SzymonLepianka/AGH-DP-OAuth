@@ -2,26 +2,39 @@ package Group28.OAuth.DAO;
 
 import Group28.OAuth.Domain.AuthCode;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.List;
+
 public class AuthCodesAccessObject implements IDataBaseAccessObject<AuthCode>{
+    private Connection connection;
 
-    //TODO
+    public AuthCodesAccessObject(Connection connection) {
+        this.connection = connection;
+    }
+
     @Override
-    public AuthCode create(AuthCode object) {
+    public List<AuthCode> readAll() throws SQLException {
         return null;
     }
 
     @Override
-    public AuthCode read(AuthCode object) {
+    public AuthCode readById(Long id) throws SQLException {
         return null;
     }
 
     @Override
-    public AuthCode update(AuthCode object) {
+    public AuthCode create(AuthCode object) throws SQLException {
         return null;
     }
 
     @Override
-    public void delete(AuthCode object) {
+    public AuthCode update(AuthCode object) throws SQLException {
+        return null;
+    }
+
+    @Override
+    public void remove(AuthCode object) throws SQLException {
 
     }
 }

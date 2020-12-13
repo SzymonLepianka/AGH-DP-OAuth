@@ -6,8 +6,6 @@ public interface IDatabaseEditor {
     boolean connect(String database);
     boolean disconnect();
 
-    IDatabaseEditor getInstance();
-
     IDataBaseAccessObject<User> getUsersAccessObject();
     IDataBaseAccessObject<Permission> getPermissionsAccessObject();
     IDataBaseAccessObject<ClientApp> getAppsAccessObject();

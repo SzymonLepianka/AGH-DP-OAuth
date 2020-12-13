@@ -3,14 +3,14 @@ package Group28.OAuth.Domain;
 import com.sun.istack.NotNull;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.sql.Date;
 import java.util.Set;
 
 @Entity
 @Table(name = "Users")
 public class User {
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(unique = true, name = "user_id")
     private Long id;
     @NotNull

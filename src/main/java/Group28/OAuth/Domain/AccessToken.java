@@ -1,14 +1,14 @@
 package Group28.OAuth.Domain;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.sql.Date;
 import java.util.Set;
 
 @Entity
 @Table(name="AccessTokens")
 public class AccessToken {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(unique = true, name = "accessToken_id")
     private Long id;
 

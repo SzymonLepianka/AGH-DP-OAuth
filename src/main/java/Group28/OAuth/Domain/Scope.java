@@ -7,7 +7,7 @@ import java.util.Set;
 @Table(name = "Scopes")
 public class Scope {
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(unique = true, name = "scope_id")
     private Long id;
 
