@@ -19,35 +19,39 @@ import java.util.Map;
 @Controller
 public class WebController {
 
-    @RequestMapping("/test")
+    @RequestMapping("/auth/code/success")
     @ResponseBody
-    public String index() {
-        return "Zalogowano!";
+    public String veryficationClientIdSuccess() {
+        return "zalogowano";
     }
 
-    @RequestMapping("/login.html")
-    public String login() {
-        return "login.html";
-    }
-
-    @RequestMapping("/login-error.html")
-    public String loginerror(Model model) {
-        model.addAttribute("loginError", true);
-        return "login.html";
-    }
-
-    @GetMapping("/auth/code") //ta metoda będzie widoczna pod tym endpointem
+    @RequestMapping("/auth/code/failure")
     @ResponseBody
+    public String veryficationClientIdFailure() {
+        return "to kiedyś przekieruje do redirect URL klienta z kodem failure";
+    }
+//
+//    @RequestMapping("/login-error.html")
+//    public String loginerror(Model model) {
+//        model.addAttribute("loginError", true);
+//        return "login.html";
+//    }
+
+    @GetMapping("/auth/code")
+//    @ResponseBody
     public String authCode(@RequestParam String clientId, @RequestParam String scopes) throws SQLException {
         Map<String, String> params = new HashMap<>();
         params.put("clientID", clientId);
         params.put("scopes", scopes);
-//        VerifyingDataFromClient verifyingDataFromClient = new VerifyingDataFromClient();
-//        verifyingDataFromClient.updateState(params);
         State state = new VerifyingDataFromClient();
         Context context = new Context(state);
-        state.updateState(context, params);
-
-        return "Here should be authorization code flow mordo " + params.toString();
+        if (state.validate(context, params)){
+            // użytkownik z danym clientID istnieje
+            return "redirect:/auth/code/success";
+        }
+        else{
+            //failure
+            return "redirect:/auth/code/failure";
+        }
     }
 }

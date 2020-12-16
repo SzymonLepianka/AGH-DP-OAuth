@@ -17,4 +17,7 @@ public abstract class State {
 //        this.context = context;
 //    }
     public abstract void updateState(Context context,  Map<String, String>params) throws SQLException;
+    public  boolean validate(Context context, Map<String, String> params) throws SQLException{
+        return false;
+    };
 }

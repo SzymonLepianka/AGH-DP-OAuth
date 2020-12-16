@@ -55,14 +55,13 @@ public class TestAPIController {
     @GetMapping("/clients/add")
     public @ResponseBody String addClient() throws SQLException {
         ClientApp clientApp = new ClientApp();
-//        clientApp.setId(1L);
         IDatabaseEditor db = DatabaseEditor.getInstance();
         User user = db.getUsersAccessObject().readById(1L);
         clientApp.setUser(user);
-        clientApp.setAppSecret(69L);
-        clientApp.setRedirectURL("pornhub.com");
+        clientApp.setAppSecret(20L);
+        clientApp.setRedirectURL("facebook.com");
         db.getAppsAccessObject().create(clientApp);
-        return "dodano apke mordo";
+        return "dodano apke";
     }
 
 

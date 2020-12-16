@@ -22,15 +22,20 @@ public class VerifyingDataFromClient extends State {
 
     //TODO: Business logic and state transition
     @Override
-    public void updateState(Context context,  Map<String, String> params) throws SQLException {
+    public void updateState(Context context,  Map<String, String> params)  {
+        System.out.println("VerifyingDataFromClient");
+        //TODO: zmiana stanu
+//        context.setCurrentState([nowy stan].instance());
+    }
+    @Override
+    public boolean validate(Context context,  Map<String, String> params)  throws SQLException{
         System.out.println("VerifyingDataFromClient");
         System.out.println(params.toString());
         IDatabaseEditor dbEditor = DatabaseEditor.getInstance();
         if(dbEditor.getAppsAccessObject().readById((Long.parseLong(params.get("clientID")))) != null){
-            System.out.println("panie boże jest w pyte");
+            return true;
         }
-        //TODO: zmiana stanu
-//        context.setCurrentState([nowy stan].instance());
+        return false;
     }
 
-}
+    }
