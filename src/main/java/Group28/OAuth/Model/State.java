@@ -11,11 +11,6 @@ public abstract class State {
 
     protected State() {}
 
-    //może abs class?:
-//    Context context = null;
-//    State(Context context){
-//        this.context = context;
-//    }
     public abstract void updateState(Context context,  Map<String, String>params) throws SQLException;
     public  boolean validate(Context context, Map<String, String> params) throws SQLException{
         return false;
