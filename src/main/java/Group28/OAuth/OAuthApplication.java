@@ -10,11 +10,8 @@ import java.util.Collections;
 
 @SpringBootApplication
 public class OAuthApplication {
-
 	public static void main(String[] args) {
 		SpringApplication.run(OAuthApplication.class, args);
-
-		Context context = new Context(null);
 	}
 
 }
