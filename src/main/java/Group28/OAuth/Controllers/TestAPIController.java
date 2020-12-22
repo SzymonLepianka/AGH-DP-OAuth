@@ -26,7 +26,7 @@ public class TestAPIController {
         return sb.toString();
     }
 
-    @GetMapping("/users/add")
+    @PostMapping("/users/add")
     public @ResponseBody String addUser() throws SQLException {
 
         User newUser = new User();
@@ -61,7 +61,7 @@ public class TestAPIController {
         clientApp.setAppSecret(20L);
         clientApp.setRedirectURL("facebook.com");
         db.getAppsAccessObject().create(clientApp);
-        return "dodano apke";
+        return "new application added!";
     }
 
 
