@@ -2,6 +2,7 @@ package Group28.OAuth.Controllers;
 
 import Group28.OAuth.DAO.DatabaseEditor;
 import Group28.OAuth.DAO.IDatabaseEditor;
+import Group28.OAuth.Domain.ClientApp;
 import Group28.OAuth.Domain.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +28,7 @@ public class TestAPIController {
 
     @PostMapping("/users/add")
     public @ResponseBody String addUser() throws SQLException {
+
         User newUser = new User();
         newUser.setFirstName("Bartek");
         newUser.setSurname("Kregielewski");
@@ -38,4 +40,31 @@ public class TestAPIController {
 
         return "ok";
     }
+
+    @GetMapping("/clients")
+    public @ResponseBody String getAllApps() throws SQLException {
+        IDatabaseEditor dbEditor = DatabaseEditor.getInstance();
+        StringBuilder sb = new StringBuilder();
+        List<ClientApp> clientAppList = dbEditor.getAppsAccessObject().readAll();
+        for (var clientApp : clientAppList) {
+            sb.append(clientApp.getRedirectURL());
+        }
+        return sb.toString();
+    }
+
+    @GetMapping("/clients/add")
+    public @ResponseBody String addClient() throws SQLException {
+        ClientApp clientApp = new ClientApp();
+        IDatabaseEditor db = DatabaseEditor.getInstance();
+        User user = db.getUsersAccessObject().readById(1L);
+        clientApp.setUser(user);
+        clientApp.setAppSecret(20L);
+        clientApp.setRedirectURL("facebook.com");
+        db.getAppsAccessObject().create(clientApp);
+        return "new application added!";
+    }
+
+
+
+
 }
