@@ -1,4 +1,4 @@
-package Group28.OAuth;
+package Group28.OAuth.Controllers;
 
 import Group28.OAuth.DAO.AppsAccessObject;
 import Group28.OAuth.Domain.ClientApp;
@@ -30,12 +30,7 @@ public class WebController {
     public String veryficationClientIdFailure() {
         return "to kiedyś przekieruje do redirect URL klienta z kodem failure";
     }
-//
-//    @RequestMapping("/login-error.html")
-//    public String loginerror(Model model) {
-//        model.addAttribute("loginError", true);
-//        return "login.html";
-//    }
+
 
     @GetMapping("/auth/code")
 //    @ResponseBody
@@ -49,7 +44,7 @@ public class WebController {
             // użytkownik z danym clientID istnieje
             return "redirect:/auth/code/success";
         }
-        else{
+        else {
             //failure
             return "redirect:/auth/code/failure";
         }

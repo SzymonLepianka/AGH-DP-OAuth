@@ -1,8 +1,12 @@
 package Group28.OAuth.Model;
+
+/*Provides and interface to client to perform some action
+and delegates state specific requests to the  subclass
+that defines the current state.*/
+
 public class Context {
 
     private State currentState;
-    private String Id;
 
     public Context(State currentState)
     {
@@ -19,14 +23,6 @@ public class Context {
 
     public void setCurrentState(State currentState) {
         this.currentState = currentState;
-    }
-
-    public String getId() {
-        return Id;
-    }
-
-    public void setId(String packageId) {
-        this.Id = packageId;
     }
 
     public void changeState(State state) {
