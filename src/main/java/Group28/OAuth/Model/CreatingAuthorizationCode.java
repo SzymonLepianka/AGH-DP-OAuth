@@ -21,4 +21,5 @@ public class CreatingAuthorizationCode extends State {
         //TODO: zmiana stanu
 //        context.setCurrentState([nowy stan].instance());
     }
+
 }
