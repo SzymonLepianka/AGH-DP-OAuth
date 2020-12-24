@@ -9,10 +9,14 @@ public abstract class State {
         this.context = context;
     }
 
-    protected State() {}
+    public State() {
 
-    public abstract void updateState(Context context,  Map<String, String>params) throws SQLException;
-    public  boolean validate(Context context, Map<String, String> params) throws SQLException{
-        return false;
-    };
+    }
+//
+//    protected State() {}
+
+//    public abstract void updateState(Context context,  Map<String, String>params) throws SQLException;
+    public abstract Response handle(Context context, Map<String, String> params) throws SQLException;
+    public abstract String toString();
 }
+

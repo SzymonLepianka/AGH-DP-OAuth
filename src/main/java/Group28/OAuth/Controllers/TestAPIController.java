@@ -4,6 +4,9 @@ import Group28.OAuth.DAO.DatabaseEditor;
 import Group28.OAuth.DAO.IDatabaseEditor;
 import Group28.OAuth.Domain.ClientApp;
 import Group28.OAuth.Domain.User;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +17,9 @@ import java.util.List;
 @Controller
 @RequestMapping("/api")
 public class TestAPIController {
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @GetMapping("/users")
     public @ResponseBody String getAllUsers() throws SQLException {
@@ -26,19 +32,44 @@ public class TestAPIController {
         return sb.toString();
     }
 
-    @PostMapping("/users/add")
-    public @ResponseBody String addUser() throws SQLException {
+//    @PostMapping("/users/add")
+//    public @ResponseBody String addUser() throws SQLException {
+//
+//        User newUser = new User();
+//        newUser.setFirstName("Bartek2");
+//        newUser.setSurname("Kregielewski2");
+//        newUser.setEmail("alex@o2.xd");
+//        newUser.setPassword("TEST123");
+//        newUser.setDeveloper(false);
+//        IDatabaseEditor db = DatabaseEditor.getInstance();
+//        db.getUsersAccessObject().create(newUser);
+//
+//        return "ok";
+//    }
 
+    //TODO: powinien być POST, ale mi nie działa ~Szymek
+
+    @GetMapping("/users/add")
+    public @ResponseBody String addUser(@RequestParam Date birth_date,
+                                        @RequestParam String email,
+                                        @RequestParam String first_name,
+                                        @RequestParam Boolean is_developer,
+                                        @RequestParam String password,
+                                        @RequestParam String phone_number,
+                                        @RequestParam String surname,
+                                        @RequestParam String username) throws SQLException {
         User newUser = new User();
-        newUser.setFirstName("Bartek");
-        newUser.setSurname("Kregielewski");
-        newUser.setEmail("alex@o2.xd");
-        newUser.setPassword("TEST123");
-        newUser.setDeveloper(false);
+        newUser.setBirthDate(birth_date);
+        newUser.setEmail(email);
+        newUser.setFirstName(first_name);
+        newUser.setDeveloper(is_developer);
+        newUser.setPassword(passwordEncoder.encode(password));
+        newUser.setPhoneNumber(phone_number);
+        newUser.setSurname(surname);
+        newUser.setUsername(username);
         IDatabaseEditor db = DatabaseEditor.getInstance();
         db.getUsersAccessObject().create(newUser);
-
-        return "ok";
+        return "Stworzono użytkownika";
     }
 
     @GetMapping("/clients")
@@ -63,8 +94,4 @@ public class TestAPIController {
         db.getAppsAccessObject().create(clientApp);
         return "new application added!";
     }
-
-
-
-
 }

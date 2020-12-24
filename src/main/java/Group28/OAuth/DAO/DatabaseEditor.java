@@ -11,7 +11,7 @@ import java.sql.SQLException;
 //TODO Properties are hardwired, find a way to use @Value
 public class DatabaseEditor implements IDatabaseEditor {
     @Value("${spring.datasource.url}")
-    private String databaseUrl = "jdbc:mysql://localhost:3306/oauth_db?serverTimezone=UTC";
+    private String databaseUrl = "jdbc:mysql://localhost:3306/oauth_db?serverTimezone=Europe/Warsaw";
 
     @Value("${spring.datasource.username}")
     private String databaseUser = "root";

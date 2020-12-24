@@ -1,26 +1,36 @@
 package Group28.OAuth.Model;
 
+import java.sql.SQLException;
 import java.util.Map;
 
 public class AuthenticatingClient extends State{
-    AuthenticatingClient(Context context) {
+    public AuthenticatingClient(Context context) {
         super(context);
-
     }
+
 
 //    Singleton
-    private static AuthenticatingClient instance = new AuthenticatingClient();
-    private AuthenticatingClient() {}
-    public static AuthenticatingClient instance() {
-        return instance;
-    }
+//    private static AuthenticatingClient instance = new AuthenticatingClient();
+//    private AuthenticatingClient() {}
+//    public static AuthenticatingClient instance() {
+//        return instance;
+//    }
+//
+//    // Business logic and state transition
+//    @Override
+//    public void updateState(Context context,  Map<String, String> params)
+//    {
+////        System.out.println("AuthenticatingClient");
+////        context.setCurrentState([nowy stan].instance());
+//    }
 
-    //TODO: Business logic and state transition
     @Override
-    public void updateState(Context context,  Map<String, String> params)
-    {
-//        System.out.println("AuthenticatingClient");
-//        context.setCurrentState([nowy stan].instance());
+    public Response handle(Context context, Map<String, String> params) throws SQLException {
+        return null;
     }
 
+    @Override
+    public String toString() {
+        return "AuthenticatingClient";
+    }
 }

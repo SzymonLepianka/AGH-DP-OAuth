@@ -2,6 +2,8 @@ package Group28.OAuth.Domain;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.sql.Time;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "AuthCodes")
@@ -21,13 +23,15 @@ public class AuthCode {
 
     private boolean revoked;
 
-    private Date expiresAt;
+    private String content;
 
-    public Date getExpiresAt() {
+    private Timestamp expiresAt;
+
+    public Timestamp getExpiresAt() {
         return expiresAt;
     }
 
-    public void setExpiresAt(Date expiresAt) {
+    public void setExpiresAt(Timestamp expiresAt) {
         this.expiresAt = expiresAt;
     }
 
@@ -61,5 +65,13 @@ public class AuthCode {
 
     public void setClientApp(ClientApp clientApp) {
         this.clientApp = clientApp;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 }

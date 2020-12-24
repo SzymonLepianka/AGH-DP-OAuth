@@ -50,7 +50,7 @@ public class AppsAccessObject implements IDataBaseAccessObject<ClientApp>{
 
     @Override
     public ClientApp create(ClientApp object) throws SQLException {
-        String query = "insert into clients_apps (app_secret, redirecturl, age_restriction, user_id)" + "values (?,?,?,?)";
+        String query = "insert into client_apps (app_secret, redirecturl, age_restriction, user_id)" + "values (?,?,?,?)";
         PreparedStatement preparedStmt = this.connection.prepareStatement(query);
         preparedStmt.setLong(1, object.getAppSecret());
         preparedStmt.setString(2,object.getRedirectURL());
