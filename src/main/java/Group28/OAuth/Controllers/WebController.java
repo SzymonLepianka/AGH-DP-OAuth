@@ -41,7 +41,7 @@ public class WebController {
 
         // tworzę Context i ustawiam stan na VerifyingDataFromClient
         Context context = new Context();
-        context.changeState(new VerifyingDataFromClient(context));
+        context.changeState(new VerifyingDataFromClient());
 
         // wywołuję metodę handle
         // w optymistycznym scenariuszu wywoła się:
@@ -57,7 +57,7 @@ public class WebController {
 
         // TODO:
         // tu się wywoła view
-        
+
         // jestesmy we view:
 //        AuthCode authCode;
 //        if (response.content instanceof AuthCode){

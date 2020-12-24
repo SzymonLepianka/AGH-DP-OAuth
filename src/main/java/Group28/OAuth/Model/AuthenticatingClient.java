@@ -1,5 +1,8 @@
 package Group28.OAuth.Model;
 
+import Group28.OAuth.DAO.DatabaseEditor;
+import Group28.OAuth.DAO.IDatabaseEditor;
+
 import java.sql.SQLException;
 import java.util.Map;
 
@@ -26,7 +29,20 @@ public class AuthenticatingClient extends State{
 
     @Override
     public Response handle(Context context, Map<String, String> params) throws SQLException {
-        return null;
+
+        System.out.println("AuthenticatingClient");
+
+        // sprawdzam czy klient o danych clientId w params istnieje w bazie danych
+        IDatabaseEditor dbEditor = DatabaseEditor.getInstance();
+        if(dbEditor.getAppsAccessObject().readById((Long.parseLong(params.get("clientID")))) != null) {
+            context.changeState(new VerifyingDataFromClient());
+        }
+        else {
+            context.changeState(new Failure());
+            params.put("failIn", "AuthenticatingClient(nie ma takiego klienta)");
+        }
+        // wywołuję VerifyingDataFromClient w przypadku gdy powodzenia / Failure w przeciwym przypadku
+        return context.handle(params);
     }
 
     @Override
