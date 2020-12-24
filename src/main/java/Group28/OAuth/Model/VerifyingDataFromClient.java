@@ -7,9 +7,9 @@ import java.sql.SQLException;
 import java.util.Map;
 
 public class VerifyingDataFromClient extends State {
-    public VerifyingDataFromClient(Context context) {
-        super(context);
-    }
+//    public VerifyingDataFromClient(Context context) {
+//        super(context);
+//    }
 
     //Singleton
 //    private static VerifyingDataFromClient instance = new VerifyingDataFromClient();
@@ -32,17 +32,16 @@ public class VerifyingDataFromClient extends State {
 
         System.out.println("VerifyingDataFromClient");
 
-        // sprawdzam czy klient o danych clientId w params istnieje w bazei danych
-        IDatabaseEditor dbEditor = DatabaseEditor.getInstance();
-        if(dbEditor.getAppsAccessObject().readById((Long.parseLong(params.get("clientID")))) != null) {
+        if (params.containsKey("scopes")){
             context.changeState(new CreatingAuthorizationCode());
         }
+        //TODO: else - ExchangingAuthorizationCodeForAccessToken oraz RefreshingAccessToken
         else {
+            
             context.changeState(new Failure());
-            params.put("failIn", "VerifyingDataFromClient(nie ma takiego klienta)");
         }
-
         // wywołuję CreatingAuthorizationCode w przypadku gdy powodzenia / Failure w przeciwym przypadku
+        // w przyszłości CreatingAuthorizationCode / ExchangingAuthorizationCodeForAccessToken / RefreshingAccessToken
         return context.handle(params);
     }
 
