@@ -2,6 +2,7 @@ package Group28.OAuth.Domain;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name="RefreshTokens")
@@ -18,7 +19,7 @@ public class RefreshToken {
 
     private boolean revoked;
 
-    private Date expiresAt;
+    private Timestamp expiresAt;
 
     public Long getId() {
         return id;
@@ -36,11 +37,11 @@ public class RefreshToken {
         this.revoked = revoked;
     }
 
-    public Date getExpiresAt() {
+    public Timestamp getExpiresAt() {
         return expiresAt;
     }
 
-    public void setExpiresAt(Date expiresAt) {
+    public void setExpiresAt(Timestamp expiresAt) {
         this.expiresAt = expiresAt;
     }
 

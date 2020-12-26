@@ -2,6 +2,7 @@ package Group28.OAuth.Domain;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.Set;
 
 @Entity
@@ -25,11 +26,11 @@ public class AccessToken {
 
     private String scopes;
 
-    private Date createdAt;
+    private Timestamp createdAt;
 
-    private Date updatedAt;
+    private Timestamp updatedAt;
 
-    private Date expiresAt;
+    private Timestamp expiresAt;
 
     private boolean revoked;
 
@@ -49,27 +50,27 @@ public class AccessToken {
         this.scopes = scopes;
     }
 
-    public Date getCreatedAt() {
+    public Timestamp getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Date createdAt) {
+    public void setCreatedAt(Timestamp createdAt) {
         this.createdAt = createdAt;
     }
 
-    public Date getUpdatedAt() {
+    public Timestamp getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(Date updatedAt) {
+    public void setUpdatedAt(Timestamp updatedAt) {
         this.updatedAt = updatedAt;
     }
 
-    public Date getExpiresAt() {
+    public Timestamp getExpiresAt() {
         return expiresAt;
     }
 
-    public void setExpiresAt(Date expiresAt) {
+    public void setExpiresAt(Timestamp expiresAt) {
         this.expiresAt = expiresAt;
     }
 

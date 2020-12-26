@@ -29,11 +29,11 @@ public class AccessTokensAccessObject implements IDataBaseAccessObject<AccessTok
     private AccessToken createAccessTokenFromResult(ResultSet rs) throws SQLException {
         AccessToken accessToken = new AccessToken();
         accessToken.setId(rs.getLong("access_token_id"));
-        accessToken.setCreatedAt(rs.getDate("created_at"));
-        accessToken.setExpiresAt(rs.getDate("expires_at"));
+        accessToken.setCreatedAt(rs.getTimestamp("created_at"));
+        accessToken.setExpiresAt(rs.getTimestamp("expires_at"));
         accessToken.setRevoked(rs.getBoolean("revoked"));
         accessToken.setScopes(rs.getString("scopes"));
-        accessToken.setUpdatedAt(rs.getDate("updated_at"));
+        accessToken.setUpdatedAt(rs.getTimestamp("updated_at"));
         ClientApp clientApp = DatabaseEditor.getInstance().getAppsAccessObject().readById(rs.getLong("client_app_id"));
         accessToken.setClientApp(clientApp);
         User user = DatabaseEditor.getInstance().getUsersAccessObject().readById(rs.getLong("user_id"));
@@ -56,11 +56,11 @@ public class AccessTokensAccessObject implements IDataBaseAccessObject<AccessTok
     public AccessToken create(AccessToken object) throws SQLException {
         String query = " insert into access_tokens (created_at, expires_at, revoked, scopes, updated_at, client_app_id, user_id)" + " values (?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement preparedStmt = this.connection.prepareStatement(query);
-        preparedStmt.setDate(1, object.getCreatedAt());
-        preparedStmt.setDate(2, object.getExpiresAt());
+        preparedStmt.setTimestamp(1, object.getCreatedAt());
+        preparedStmt.setTimestamp(2, object.getExpiresAt());
         preparedStmt.setBoolean(3, object.isRevoked());
         preparedStmt.setString(4, object.getScopes());
-        preparedStmt.setDate(5, object.getUpdatedAt());
+        preparedStmt.setTimestamp(5, object.getUpdatedAt());
         preparedStmt.setLong(6, object.getClientApp().getId());
         preparedStmt.setLong(7, object.getUser().getId());
         preparedStmt.execute();
@@ -72,11 +72,11 @@ public class AccessTokensAccessObject implements IDataBaseAccessObject<AccessTok
         String query = "update access_tokens set created_at = ?, expires_at = ?, revoked = ?, scopes = ?, updated_at = ?, client_app_id = ?, user_id = ? where access_token_id = ?";
         PreparedStatement preparedStmt = this.connection.prepareStatement(query);
         // Set
-        preparedStmt.setDate(1, object.getCreatedAt());
-        preparedStmt.setDate(2, object.getExpiresAt());
+        preparedStmt.setTimestamp(1, object.getCreatedAt());
+        preparedStmt.setTimestamp(2, object.getExpiresAt());
         preparedStmt.setBoolean(3, object.isRevoked());
         preparedStmt.setString(4, object.getScopes());
-        preparedStmt.setDate(5, object.getUpdatedAt());
+        preparedStmt.setTimestamp(5, object.getUpdatedAt());
         preparedStmt.setLong(6, object.getClientApp().getId());
         preparedStmt.setLong(7, object.getUser().getId());
         // Where

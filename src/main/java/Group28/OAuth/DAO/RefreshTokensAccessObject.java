@@ -17,7 +17,7 @@ public class RefreshTokensAccessObject implements IDataBaseAccessObject<RefreshT
     private RefreshToken createRefreshTokenFromResult(ResultSet rs) throws SQLException {
         RefreshToken refreshToken = new RefreshToken();
         refreshToken.setId(rs.getLong("refresh_token_id"));
-        refreshToken.setExpiresAt(rs.getDate("expires_at"));
+        refreshToken.setExpiresAt(rs.getTimestamp("expires_at"));
         refreshToken.setRevoked(rs.getBoolean("revoked"));
         AccessToken accessToken = DatabaseEditor.getInstance().getAccessTokensAccessObject().readById(rs.getLong("access_token_id"));
         refreshToken.setAccessToken(accessToken);
@@ -50,7 +50,7 @@ public class RefreshTokensAccessObject implements IDataBaseAccessObject<RefreshT
     public RefreshToken create(RefreshToken object) throws SQLException {
         String query = " insert into refresh_tokens (expires_at, revoked, access_token_id)" + " values (?, ?, ?)";
         PreparedStatement preparedStmt = this.connection.prepareStatement(query);
-        preparedStmt.setDate(1, object.getExpiresAt());
+        preparedStmt.setTimestamp(1, object.getExpiresAt());
         preparedStmt.setBoolean(2, object.isRevoked());
         preparedStmt.setLong(3, object.getAccessToken().getId());
         preparedStmt.execute();
@@ -62,7 +62,7 @@ public class RefreshTokensAccessObject implements IDataBaseAccessObject<RefreshT
         String query = "update refresh_tokens set expires_at = ?, revoked = ?, access_token_id = ? where refresh_token_id = ?";
         PreparedStatement preparedStmt = this.connection.prepareStatement(query);
         // Set
-        preparedStmt.setDate(1, object.getExpiresAt());
+        preparedStmt.setTimestamp(1, object.getExpiresAt());
         preparedStmt.setBoolean(2, object.isRevoked());
         preparedStmt.setLong(3, object.getAccessToken().getId());
         // Where
