@@ -39,7 +39,7 @@ public class RefreshTokenBuilder {
         return map;
     }
 
-    public String generateToken(){
+    public String generateToken() {
 
         // The JWT signature algorithm we will be using to sign the token
         SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;

@@ -2,13 +2,6 @@ package Group28.OAuth.Model;
 
 public class Response {
 
-//    public enum TYPE {
-//        CODE,
-//        ACCESS_AND_REFRESH,
-//        FAIL
-//    }
-
-//    TYPE type;
     public Object content;
     public String redirect;
 

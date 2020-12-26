@@ -25,7 +25,6 @@ public class AccessTokenBuilder {
         this.clientID = clientID;
         this.userID = String.valueOf(userID);
         this.secretKey = String.valueOf(appSecret);
-        System.out.println(toString());
     }
 
     @Override
@@ -47,7 +46,7 @@ public class AccessTokenBuilder {
         return map;
     }
 
-    public String generateToken(){
+    public String generateToken() {
 
         // The JWT signature algorithm we will be using to sign the token
         SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
@@ -58,7 +57,6 @@ public class AccessTokenBuilder {
 
         //Let's set the JWT Claims
         JwtBuilder builder = Jwts.builder()
-//                .setId("id_example")
                 .setHeader(createHead())
                 .setIssuedAt(createdAt)
                 .setExpiration(expiresAt)

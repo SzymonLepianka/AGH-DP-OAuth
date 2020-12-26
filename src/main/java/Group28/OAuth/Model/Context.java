@@ -19,7 +19,7 @@ public class Context {
 //        }
 //    }
 
-    public Context(){
+    public Context() {
         this.currentState = new AuthenticatingClient();
     }
 

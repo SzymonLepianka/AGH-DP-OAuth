@@ -3,66 +3,52 @@ package Group28.OAuth.Model;
 import Group28.OAuth.DAO.DatabaseEditor;
 import Group28.OAuth.DAO.IDatabaseEditor;
 import Group28.OAuth.Domain.AuthCode;
-import Group28.OAuth.Domain.Scope;
 
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
 public class VerifyingDataFromClient extends State {
-//    public VerifyingDataFromClient(Context context) {
-//        super(context);
-//    }
-
-    //Singleton
-//    private static VerifyingDataFromClient instance = new VerifyingDataFromClient();
-//    public VerifyingDataFromClient() {
-//        super();
-//    }
-//    public static VerifyingDataFromClient instance() {
-//        return instance;
-//    }
-//    //Business logic and state transition
-//    @Override
-//    public void updateState(Context context,  Map<String, String> params)  {
-//        System.out.println("VerifyingDataFromClient");
-//        //zmiana stanu
-////        context.setCurrentState([nowy stan].instance());
-//    }
 
     @Override
-    public Response handle(Context context, Map<String, String> params)  throws SQLException {
+    public Response handle(Context context, Map<String, String> params) throws SQLException {
 
         System.out.println("VerifyingDataFromClient");
 
-        if (params.containsKey("scopes")){
+        // jeśli params zawierają "scopes" wtedy CreatingAuthorizationCode
+        if (params.containsKey("scopes")) {
             context.changeState(new CreatingAuthorizationCode());
-        }
-        else if(params.containsKey("code")){
 
+            // jeśli params zawierają "code" wtedy ExchangingAuthorizationCodeForAccessToken
+        } else if (params.containsKey("code")) {
+
+            // pobieram 'code' i 'clientID' z 'params'
             String code = params.get("code");
             Long clientID = Long.parseLong(params.get("clientID"));
 
+            // pobieram z bazy danych AuthCodes i szukam przekazanego w params 'code'
             IDatabaseEditor db = DatabaseEditor.getInstance();
             List<AuthCode> codesFromDataBase = db.getAuthCodesAccessObject().readAll();
             AuthCode authCode = codesFromDataBase.stream()
                     .filter(c -> code.equals(c.getContent()) && clientID.equals(c.getClientApp().getId()))
                     .findFirst()
                     .orElse(null);
-//                    .orElseThrow(() -> new IllegalStateException("Code " + code + " does not exists (while VerifyingDataFromClient)"));
-            if (authCode != null){
+
+            // jeśli udało się znaleźć AuthCode zmianiam stan na ExchangingAuthorizationCodeForAccessToken
+            // w przyciwnym wypadku na Failure
+            if (authCode != null) {
                 context.changeState(new ExchangingAuthorizationCodeForAccessToken());
-            } else{
+            } else {
                 context.changeState(new Failure());
             }
-        }
-        else {
+            //TODO: else - RefreshingAccessToken
+
+            // jeśli żadne parametry w params nie pasuje wtedy -> Failure
+        } else {
             context.changeState(new Failure());
         }
-        //TODO: else - ExchangingAuthorizationCodeForAccessToken oraz RefreshingAccessToken
 
-        // wywołuję CreatingAuthorizationCode w przypadku gdy powodzenia / Failure w przeciwym przypadku
-        // w przyszłości CreatingAuthorizationCode / ExchangingAuthorizationCodeForAccessToken / RefreshingAccessToken
+        // wywołuję CreatingAuthorizationCode / ExchangingAuthorizationCodeForAccessToken / RefreshingAccessToken w przypadku gdy powodzenia / Failure w przeciwym przypadku
         return context.handle(params);
     }
 
