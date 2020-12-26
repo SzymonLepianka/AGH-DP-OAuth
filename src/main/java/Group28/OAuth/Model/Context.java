@@ -20,7 +20,7 @@ public class Context {
 //    }
 
     public Context(){
-        this.currentState = new Failure();
+        this.currentState = new AuthenticatingClient();
     }
 
     public Response handle(Map<String, String> params) throws SQLException {
