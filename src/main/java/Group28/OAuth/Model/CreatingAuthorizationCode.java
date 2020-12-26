@@ -18,25 +18,6 @@ import java.util.Map;
 
 public class CreatingAuthorizationCode extends State {
 
-
-//    //Singleton
-//    private static CreatingAuthorizationCode instance = new CreatingAuthorizationCode();
-//
-//    private CreatingAuthorizationCode() {}
-//
-//    public static CreatingAuthorizationCode instance() {
-//        return instance;
-//    }
-//
-//    //Business logic and state transition
-//    @Override
-//    public void updateState(Context context,  Map<String, String> params)
-//    {
-//        System.out.println("CreatingAuthorizationCode");
-//        //zmiana stanu
-////        context.setCurrentState([nowy stan].instance());
-//    }
-
     @Override
     public Response handle(Context context, Map<String, String> params) throws SQLException {
 
@@ -45,10 +26,9 @@ public class CreatingAuthorizationCode extends State {
         // pobieram 'username' aktualnie zalogowanego użytkownika:
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String username;
-        if (principal instanceof UserDetails){
+        if (principal instanceof UserDetails) {
             username = ((UserDetails) principal).getUsername();
-        }
-        else {
+        } else {
             username = principal.toString();
         }
 
@@ -65,7 +45,7 @@ public class CreatingAuthorizationCode extends State {
         final String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
         SecureRandom rnd = new SecureRandom();
         StringBuilder sb = new StringBuilder(codeLength);
-        for(int i = 0; i < codeLength; i++)
+        for (int i = 0; i < codeLength; i++)
             sb.append(AB.charAt(rnd.nextInt(AB.length())));
         String generatedString = sb.toString();
 

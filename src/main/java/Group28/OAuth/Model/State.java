@@ -4,19 +4,15 @@ import java.sql.SQLException;
 import java.util.Map;
 
 public abstract class State {
-    Context context;
-    State(Context context) {
-        this.context = context;
-    }
 
-    public State() {
+//    Context context;
 
-    }
-//
-//    protected State() {}
+//    State(Context context) {
+//        this.context = context;
+//    }
 
-//    public abstract void updateState(Context context,  Map<String, String>params) throws SQLException;
     public abstract Response handle(Context context, Map<String, String> params) throws SQLException;
+
     public abstract String toString();
 }
 

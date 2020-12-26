@@ -6,10 +6,10 @@ import Group28.OAuth.DAO.IDatabaseEditor;
 import java.sql.SQLException;
 import java.util.Map;
 
-public class AuthenticatingClient extends State{
-    public AuthenticatingClient(Context context) {
-        super(context);
-    }
+public class AuthenticatingClient extends State {
+//    public AuthenticatingClient(Context context) {
+//        super(context);
+//    }
 
 
 //    Singleton
@@ -34,10 +34,9 @@ public class AuthenticatingClient extends State{
 
         // sprawdzam czy klient o danych clientId w params istnieje w bazie danych
         IDatabaseEditor dbEditor = DatabaseEditor.getInstance();
-        if(dbEditor.getAppsAccessObject().readById((Long.parseLong(params.get("clientID")))) != null) {
+        if (dbEditor.getAppsAccessObject().readById((Long.parseLong(params.get("clientID")))) != null) {
             context.changeState(new VerifyingDataFromClient());
-        }
-        else {
+        } else {
             context.changeState(new Failure());
             params.put("failIn", "AuthenticatingClient(nie ma takiego klienta)");
         }
