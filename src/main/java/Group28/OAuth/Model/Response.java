@@ -1,7 +1,5 @@
 package Group28.OAuth.Model;
 
-import Group28.OAuth.Domain.AuthCode;
-
 public class Response {
 
 //    public enum TYPE {

@@ -25,7 +25,12 @@ public class ExchangingAuthorizationCodeForAccessToken extends State {
 
     @Override
     public Response handle(Context context, Map<String, String> params) throws SQLException {
-        return null;
+
+        System.out.println("ExchangingAuthorizationCodeForAccessToken");
+
+        context.changeState(new CreatingAccessToken());
+
+        return context.handle(params);
     }
 
     @Override

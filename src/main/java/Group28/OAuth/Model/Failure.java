@@ -25,6 +25,9 @@ public class Failure extends State {
 
     @Override
     public Response handle(Context context, Map<String, String> params) throws SQLException {
+
+        System.out.println("Failure");
+
         return null;
     }
 

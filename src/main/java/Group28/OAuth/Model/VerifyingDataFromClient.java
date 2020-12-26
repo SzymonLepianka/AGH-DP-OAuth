@@ -2,8 +2,11 @@ package Group28.OAuth.Model;
 
 import Group28.OAuth.DAO.DatabaseEditor;
 import Group28.OAuth.DAO.IDatabaseEditor;
+import Group28.OAuth.Domain.AuthCode;
+import Group28.OAuth.Domain.Scope;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Map;
 
 public class VerifyingDataFromClient extends State {
@@ -35,11 +38,29 @@ public class VerifyingDataFromClient extends State {
         if (params.containsKey("scopes")){
             context.changeState(new CreatingAuthorizationCode());
         }
-        //TODO: else - ExchangingAuthorizationCodeForAccessToken oraz RefreshingAccessToken
+        else if(params.containsKey("code")){
+
+            String code = params.get("code");
+            Long clientID = Long.parseLong(params.get("clientID"));
+
+            IDatabaseEditor db = DatabaseEditor.getInstance();
+            List<AuthCode> codesFromDataBase = db.getAuthCodesAccessObject().readAll();
+            AuthCode authCode = codesFromDataBase.stream()
+                    .filter(c -> code.equals(c.getContent()) && clientID.equals(c.getClientApp().getId()))
+                    .findFirst()
+                    .orElse(null);
+//                    .orElseThrow(() -> new IllegalStateException("Code " + code + " does not exists (while VerifyingDataFromClient)"));
+            if (authCode != null){
+                context.changeState(new ExchangingAuthorizationCodeForAccessToken());
+            } else{
+                context.changeState(new Failure());
+            }
+        }
         else {
-            
             context.changeState(new Failure());
         }
+        //TODO: else - ExchangingAuthorizationCodeForAccessToken oraz RefreshingAccessToken
+
         // wywołuję CreatingAuthorizationCode w przypadku gdy powodzenia / Failure w przeciwym przypadku
         // w przyszłości CreatingAuthorizationCode / ExchangingAuthorizationCodeForAccessToken / RefreshingAccessToken
         return context.handle(params);
