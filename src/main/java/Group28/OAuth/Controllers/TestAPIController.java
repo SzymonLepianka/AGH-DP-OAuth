@@ -15,7 +15,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 @Controller
-@RequestMapping("/api")
+@RequestMapping("/testApi")
 public class TestAPIController {
 
     @Autowired
