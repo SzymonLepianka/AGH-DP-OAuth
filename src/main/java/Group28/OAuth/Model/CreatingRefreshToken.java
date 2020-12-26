@@ -52,11 +52,11 @@ public class CreatingRefreshToken extends State {
 
         // buduję refreshToken
         RefreshTokenBuilder refreshTokenBuilder = new RefreshTokenBuilder(refreshToken.getExpiresAt(), refreshToken.getAccessToken().getId(), appSecret);
-        String rt = refreshTokenBuilder.generateToken();
-        System.out.println(rt);
+        String createdRefreshToken = refreshTokenBuilder.generateToken();
+        System.out.println("Created Refresh Token: " + createdRefreshToken);
 
         // dopisuję do 'params' stworzony refreshToken
-        params.put("createdRefreshToken", rt);
+        params.put("createdRefreshToken", createdRefreshToken);
 
         // zmieniam stan na RedirectingToAppRedirectURL
         context.changeState(new RedirectingToAppRedirectURL());

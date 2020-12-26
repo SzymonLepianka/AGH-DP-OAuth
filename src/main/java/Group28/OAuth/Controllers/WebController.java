@@ -1,6 +1,7 @@
 package Group28.OAuth.Controllers;
 
 import Group28.OAuth.Domain.AuthCode;
+import Group28.OAuth.Model.AuthenticatingClient;
 import Group28.OAuth.Model.Context;
 import Group28.OAuth.Model.VerifyingDataFromClient;
 import Group28.OAuth.Model.Response;
@@ -32,20 +33,20 @@ public class WebController {
 
     @GetMapping("/auth/code")
     @ResponseBody
-    public String authCode(@RequestParam String clientId, @RequestParam String scopes) throws SQLException {
+    public String authCode(@RequestParam String clientID, @RequestParam String scopes) throws SQLException {
 
         // wrzucam parametry requestu do Map
         Map<String, String> params = new HashMap<>();
-        params.put("clientID", clientId);
+        params.put("clientID", clientID);
         params.put("scopes", scopes);
 
-        // tworzę Context i ustawiam stan na VerifyingDataFromClient
+        // tworzę Context i ustawiam stan na AuthenticatingClient
         Context context = new Context();
-        context.changeState(new VerifyingDataFromClient());
+        context.changeState(new AuthenticatingClient());
 
         // wywołuję metodę handle
         // w optymistycznym scenariuszu wywoła się:
-        // VerifyingDataFromClient handle -> CreatingAuthorizationCode handle -> RedirectingToAppRedirectURL handle
+        // AuthenticatingClient handle -> VerifyingDataFromClient handle -> CreatingAuthorizationCode handle -> RedirectingToAppRedirectURL handle
         // i zwróci obiekt Response z redirectURL i obiektem authCode
         Response response = context.handle(params);
 
@@ -53,10 +54,8 @@ public class WebController {
 //        System.out.println(authCode.getContent());
 //        System.out.println(response.redirect);
 
-
-
         // TODO:
-        // tu się wywoła view
+        // tu się wywoła viewS
 
         // jestesmy we view:
 //        AuthCode authCode;
@@ -71,5 +70,23 @@ public class WebController {
         // i to coś do return
 
         return "tu będzie coś od view co zawróci klienta na jego URI z paramentrem code / albo kod o błędzie";
+    }
+
+    @GetMapping("/auth/tokenForCode")
+    @ResponseBody
+    public String tokenForCode(@RequestParam String clientID, @RequestParam String code) throws SQLException {
+
+        Map<String, String> params = new HashMap<>();
+        params.put("clientID", clientID);
+        params.put("code", code);
+
+        Context context = new Context();
+        context.changeState(new AuthenticatingClient());
+        Response response = context.handle(params);
+        System.out.println((String) response.content);
+
+        //TODO: tu się wywoła view
+
+        return "zwraca token (access i refresh), id token, cookies / lub błąd że code nie istnieje";
     }
 }

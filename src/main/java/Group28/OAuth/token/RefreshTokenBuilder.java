@@ -20,7 +20,6 @@ public class RefreshTokenBuilder {
         this.expiresAt = expiresAt;
         this.secretKey = String.valueOf(appSecret);
         this.createdAccessTokenID = createdAccessTokenID;
-        System.out.println(toString());
     }
 
     @Override
