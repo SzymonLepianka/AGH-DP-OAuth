@@ -8,7 +8,7 @@ public class RefreshingAccessToken extends State {
     @Override
     public Response handle(Context context, Map<String, String> params) throws SQLException {
 
-        System.out.println("Failure");
+        System.out.println("RefreshingAccessToken");
 
         //TODO
 

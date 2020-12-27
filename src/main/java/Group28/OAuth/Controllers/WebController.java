@@ -83,10 +83,29 @@ public class WebController {
         Context context = new Context();
         context.changeState(new AuthenticatingClient());
         Response response = context.handle(params);
-        System.out.println((String) response.content);
+        System.out.println(response.content.toString());
 
         //TODO: tu się wywoła view
 
         return "zwraca token (access i refresh), id token, cookies / lub błąd że code nie istnieje";
     }
+
+    @GetMapping("/auth/refreshToken")
+    @ResponseBody
+    public String refreshToken(@RequestParam String clientID, @RequestParam String refreshToken) throws SQLException {
+
+        Map<String, String> params = new HashMap<>();
+        params.put("clientID", clientID);
+        params.put("refreshToken", refreshToken);
+
+        Context context = new Context();
+        context.changeState(new AuthenticatingClient());
+        Response response = context.handle(params);
+//        System.out.println(response.content.toString());
+
+        //TODO: tu się wywoła view
+
+        return "zwraca token (access i refresh), id token, cookies / lub błąd że code nie istnieje";
+    }
+
 }
