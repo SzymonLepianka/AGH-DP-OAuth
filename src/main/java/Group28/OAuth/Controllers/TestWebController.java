@@ -13,11 +13,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 @Controller
-public class WebController {
+public class TestWebController {
 
 //    @RequestMapping("/auth/code/success")
 //    @ResponseBody
@@ -101,11 +102,12 @@ public class WebController {
         Context context = new Context();
         context.changeState(new AuthenticatingClient());
         Response response = context.handle(params);
-//        System.out.println(response.content.toString());
+        String[] content = (String[]) response.content;
+        System.out.println(Arrays.toString(content));
 
         //TODO: tu się wywoła view
 
-        return "zwraca token (access i refresh), id token, cookies / lub błąd że code nie istnieje";
+        return "zwraca token (access i refresh), id token, cookies /";
     }
 
 }
