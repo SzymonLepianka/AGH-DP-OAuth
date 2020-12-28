@@ -3,7 +3,6 @@ package Group28.OAuth.Controllers;
 import Group28.OAuth.Model.AuthenticatingClient;
 import Group28.OAuth.Model.Context;
 import Group28.OAuth.Model.Response;
-import Group28.OAuth.Model.VerifyingDataFromClient;
 import Group28.OAuth.View.APIView;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,10 +23,11 @@ public class APIController {
     private AuthenticatingClient model;
     private APIView view;
 
-    public APIController(AuthenticatingClient model, APIView view) {
-        this.model = model;
-        this.view = view;
-    }
+//    public APIController(AuthenticatingClient model, APIView view) {
+//        this.model = model;
+//        this.view = view;
+//    }
+
     //TODO Bartek
 //    @GetMapping("/validateToken")
 //    public @ResponseBody
@@ -41,22 +41,37 @@ public class APIController {
 //
 //        return "cos dla response";
 //    }
+
     @GetMapping("/createToken")
     public @ResponseBody
     String createToken(@RequestParam String clientId, @RequestParam String authCode, HttpServletResponse httpServletResponse) throws SQLException {
         Map<String,String> params = new HashMap<>();
         params.put("clientID", clientId);
-        params.put("scopes", authCode);
+        params.put("code", authCode);
         Context context = new Context();
         Response response = context.handle(params);
+        // response.content to obiekt AuthCode
         view.showToken(response, httpServletResponse);
         return "ok";
     }
     @GetMapping("/refreshToken")
     public @ResponseBody
-    String refreshToken() throws SQLException {
+    String refreshToken(@RequestParam String clientID, @RequestParam String refreshToken) throws SQLException {
+        Map<String, String> params = new HashMap<>();
+        params.put("clientID", clientID);
+        params.put("refreshToken", refreshToken);
+
+        Context context = new Context();
+        context.changeState(new AuthenticatingClient());
+        Response response = context.handle(params);
+        // response.content to String[] - [accessToken, refreshToken]
+
+        //TODO: tu się wywoła view
+
         return null;
     }
+
+
     //TODO Bartek
 //    @GetMapping("/revokeToken")
 //    public @ResponseBody

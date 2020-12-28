@@ -46,10 +46,10 @@ public class RedirectingToAppRedirectURL extends State {
             String createdAccessToken = params.get("createdAccessToken");
 
             // zwracam obiekt Response z pobranym redirectURL i accesstoken+refreshtoken
-            return new Response(redirectURL, "accesstoken=" + createdAccessToken + "refreshtoken" + createdRefreshToken);
+            return new Response(redirectURL, new String[]{createdAccessToken, createdRefreshToken});
         }
 
-        // gdy nic się nie dopasowało zmianam stan na failure
+        // gdy nic się nie dopasowało zmienam stan na failure
         context.changeState(new Failure());
         return context.handle(params);
     }
