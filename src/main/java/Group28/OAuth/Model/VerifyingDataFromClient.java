@@ -6,9 +6,12 @@ import Group28.OAuth.Domain.AuthCode;
 import Group28.OAuth.Domain.RefreshToken;
 import Group28.OAuth.token.TokenDecoder;
 import io.jsonwebtoken.Claims;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -45,7 +48,6 @@ public class VerifyingDataFromClient extends State {
             } else {
                 context.changeState(new Failure());
             }
-            //TODO: else - RefreshingAccessToken
 
             // jeśli żadne parametry w params nie pasuje wtedy -> Failure
         } else if (params.containsKey("refreshToken")) {
@@ -57,6 +59,7 @@ public class VerifyingDataFromClient extends State {
             // czytam z danych danych appSecret clienta z danym clientID
             IDatabaseEditor db = DatabaseEditor.getInstance();
             Long appSecret = db.getAppsAccessObject().readById(clientID).getAppSecret();
+            params.put("appSecret", appSecret.toString());
 
             //dekoduję z otrzymanego tokenu accessTokenID i expiration
             TokenDecoder tokenDecoder = new TokenDecoder();
@@ -73,17 +76,17 @@ public class VerifyingDataFromClient extends State {
             RefreshToken findRefreshToken = refreshTokens.stream()
                     .filter(rt -> accessTokenID.equals(rt.getAccessToken().getId()) && (expiration.equals(rt.getExpiresAt()) || Timestamp.valueOf(expiration.toLocalDateTime().plusSeconds(1)).equals(rt.getExpiresAt())) && clientID.equals(rt.getAccessToken().getClientApp().getId()))
                     .findFirst()
-                    .orElse(null);
-//                    .orElseThrow(() -> new IllegalStateException("Refresh Token with expiresAt=" + expiration + ", accessTokenID=" + accessTokenID + ", clientID=" + clientID + " does not exists (while VerifyingDataFromClient)"));
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST)); // new IllegalStateException("Refresh Token with expiresAt=" + expiration + ", accessTokenID=" + accessTokenID + ", clientID=" + clientID + " does not exists (while VerifyingDataFromClient)"));
 
-            // jeśli nie udało się znaleźć RefreshToken zmieniam stan na Failure
-            if (findRefreshToken == null) {
-                System.out.println(("Refresh Token with expiresAt=" + expiration + ", accessTokenID=" + accessTokenID + ", clientID=" + clientID + " does not exists (while VerifyingDataFromClient)"));
-                context.changeState(new Failure());
-            } else {
-                // jeśli udało się znaleźć RefreshToken zmianiam stan na RefreshingAccessToken
-                context.changeState(new RefreshingAccessToken());
+            // sprawdzam czy refreshToken nie jest przeterminowany i czy nie jest revoked
+            if (!findRefreshToken.getExpiresAt().after(Timestamp.valueOf(LocalDateTime.now())) && !findRefreshToken.isRevoked()){
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
             }
+
+            // usuwam były refreshtoken
+            db.getRefreshTokensAccessObject().remove(findRefreshToken);
+
+            context.changeState(new RefreshingAccessToken());
         } else {
             context.changeState(new Failure());
         }

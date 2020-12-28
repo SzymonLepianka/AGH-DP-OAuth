@@ -6,6 +6,8 @@ import Group28.OAuth.Domain.AccessToken;
 import Group28.OAuth.Domain.AuthCode;
 import Group28.OAuth.Domain.Permission;
 import Group28.OAuth.token.AccessTokenBuilder;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -20,20 +22,31 @@ public class CreatingAccessToken extends State {
 
         System.out.println("CreatingAccessToken");
 
-        //pobieram z params 'code' i 'clientID'
-        String code = params.get("code");
-        Long clientID = Long.parseLong(params.get("clientID"));
-
-        // pobieram z bazy danych AuthCodes i szukam przekazanego w params 'code'
         IDatabaseEditor db = DatabaseEditor.getInstance();
-        List<AuthCode> codesFromDataBase = db.getAuthCodesAccessObject().readAll();
-        AuthCode authCode = codesFromDataBase.stream()
-                .filter(c -> code.equals(c.getContent()) && clientID.equals(c.getClientApp().getId()))
-                .findFirst()
-                .orElseThrow(() -> new IllegalStateException("Code " + code + " does not exists (while CreatingAccessToken)"));
 
-        //ID użytkownika pryzpisanego do znalezionego AuthCode
-        Long userID = authCode.getUser().getId();
+        Long clientID, userID;
+        // przypadek CreatingAuthorizationCode
+        if (params.containsKey("code")){
+            //pobieram z params 'code' i 'clientID'
+            String code = params.get("code");
+            clientID = Long.parseLong(params.get("clientID"));
+
+            // pobieram z bazy danych AuthCodes i szukam przekazanego w params 'code'
+            List<AuthCode> codesFromDataBase = db.getAuthCodesAccessObject().readAll();
+            AuthCode authCode = codesFromDataBase.stream()
+                    .filter(c -> code.equals(c.getContent()) && clientID.equals(c.getClientApp().getId()))
+                    .findFirst()
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST)); // new IllegalStateException("Code " + code + " does not exists (while CreatingAccessToken)"));
+
+            //ID użytkownika pryzpisanego do znalezionego AuthCode
+            userID = authCode.getUser().getId();
+        }
+
+        // przypadek RefreshingAccessToken
+        else {
+            clientID = Long.parseLong(params.get("clientID"));
+            userID = Long.parseLong(params.get("userID"));
+        }
 
         // ustalam createdAt oraz expiresAt (parametry tokenu)
         Timestamp createdAt = Timestamp.valueOf(LocalDateTime.now());
@@ -55,6 +68,11 @@ public class CreatingAccessToken extends State {
                     scopes.append(name);
                 }
             }
+        }
+
+        // jeśli w params nie na scopes -> dodaj (przypadek RefreshingAccessToken)
+        if (!params.containsKey("scopes")){
+            params.put("scopes", scopes.toString());
         }
 
         // tworzę obiekt accessToken - zapisuję do niego parametry i zapisuję do bazy danych
