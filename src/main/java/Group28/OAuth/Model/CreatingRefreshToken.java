@@ -5,6 +5,8 @@ import Group28.OAuth.DAO.IDatabaseEditor;
 import Group28.OAuth.Domain.AccessToken;
 import Group28.OAuth.Domain.RefreshToken;
 import Group28.OAuth.token.RefreshTokenBuilder;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -38,7 +40,7 @@ public class CreatingRefreshToken extends State {
         AccessToken accessToken = accessTokenList.stream()
                 .filter(at -> expiresAt.equals(at.getExpiresAt()) && clientID.equals(at.getClientApp().getId()) && scopes.equals(at.getScopes()))
                 .findFirst()
-                .orElseThrow(() -> new IllegalStateException("Access Token with expiresAt=" + expiresAt + " does not exists (while CreatingRefreshToken)"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST)); // new IllegalStateException("Access Token with expiresAt=" + expiresAt + " does not exists (while CreatingRefreshToken)"));
 
         // tworzę obiekt refreshToken - zapisuję do niego parametry i zapisuję do bazy danych
         RefreshToken refreshToken = new RefreshToken();

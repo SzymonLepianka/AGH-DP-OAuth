@@ -6,8 +6,12 @@ import Group28.OAuth.Domain.AuthCode;
 import Group28.OAuth.Domain.Permission;
 import Group28.OAuth.Domain.Scope;
 import Group28.OAuth.Domain.User;
+import javassist.tools.web.BadHttpRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.security.SecureRandom;
 import java.sql.SQLException;
@@ -38,7 +42,8 @@ public class CreatingAuthorizationCode extends State {
         Group28.OAuth.Domain.User user1 = users.stream()
                 .filter(user -> username.equals(user.getUsername()))
                 .findFirst()
-                .orElseThrow(() -> new IllegalStateException("Student " + username + " does not exists (while creating auth code)"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
+//        "Student " + username + " does not exists (while creating auth code)"
 
         // tworzę treść AuthCode - ciąg losowych znaków o zadanej długości codeLength
         int codeLength = 10;
@@ -83,7 +88,7 @@ public class CreatingAuthorizationCode extends State {
             Scope scope1 = scopesFromDataBase.stream()
                     .filter(s -> scope.equals(s.getName()))
                     .findFirst()
-                    .orElseThrow(() -> new IllegalStateException("Scope " + scope + " does not exists (thrown in CreatingAuthorizationCode)"));
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST)); // new IllegalStateException("Scope " + scope + " does not exists (thrown in CreatingAuthorizationCode)"));
 
             // tworzę obiekt Permission
             Permission permission = new Permission();
