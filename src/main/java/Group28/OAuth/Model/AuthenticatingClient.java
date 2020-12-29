@@ -7,10 +7,6 @@ import java.sql.SQLException;
 import java.util.Map;
 
 public class AuthenticatingClient extends State {
-//    public AuthenticatingClient(Context context) {
-//        super(context);
-//    }
-
 
 //    Singleton
 //    private static AuthenticatingClient instance = new AuthenticatingClient();

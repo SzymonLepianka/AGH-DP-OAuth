@@ -11,14 +11,6 @@ public class Context {
 
     private State currentState;
 
-//    public Context(State currentState)
-//    {
-//        this.currentState = currentState;
-//        if(currentState == null) {
-//            this.currentState = Failure.instance();
-//        }
-//    }
-
     public Context() {
         this.currentState = new AuthenticatingClient();
     }

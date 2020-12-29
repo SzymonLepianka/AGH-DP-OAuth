@@ -26,7 +26,7 @@ public class CreatingAccessToken extends State {
 
         Long clientID, userID;
         // przypadek CreatingAuthorizationCode
-        if (params.containsKey("code")){
+        if (params.containsKey("code")) {
             //pobieram z params 'code' i 'clientID'
             String code = params.get("code");
             clientID = Long.parseLong(params.get("clientID"));
@@ -71,7 +71,7 @@ public class CreatingAccessToken extends State {
         }
 
         // jeśli w params nie na scopes -> dodaj (przypadek RefreshingAccessToken)
-        if (!params.containsKey("scopes")){
+        if (!params.containsKey("scopes")) {
             params.put("scopes", scopes.toString());
         }
 
