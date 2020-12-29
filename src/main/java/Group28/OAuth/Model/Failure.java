@@ -1,5 +1,8 @@
 package Group28.OAuth.Model;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
+
 import java.sql.SQLException;
 import java.util.Map;
 
@@ -10,9 +13,7 @@ public class Failure extends State {
 
         System.out.println("Failure");
 
-        //TODO
-
-        return null;
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
     }
 
     @Override

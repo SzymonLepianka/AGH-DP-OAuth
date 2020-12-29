@@ -42,11 +42,16 @@ public class VerifyingDataFromClient extends State {
                     .orElse(null);
 
             // jeśli udało się znaleźć AuthCode zmianiam stan na ExchangingAuthorizationCodeForAccessToken
-            // w przyciwnym wypadku na Failure
+            // w przyciwnym wypadku wyrzucam wyjątek
             if (authCode != null) {
                 context.changeState(new ExchangingAuthorizationCodeForAccessToken());
             } else {
-                context.changeState(new Failure());
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Auth Code does not exist in data base");
+            }
+
+            // sprawdzam czy AuthCode nie jest revoked
+            if (authCode.isRevoked()){
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Auth Code is revoked");
             }
 
             // jeśli żadne parametry w params nie pasuje wtedy -> Failure
@@ -65,7 +70,6 @@ public class VerifyingDataFromClient extends State {
             TokenDecoder tokenDecoder = new TokenDecoder();
             Claims claims = tokenDecoder.decodeToken(refreshToken, appSecret.toString());
             Long accessTokenID = Long.parseLong(claims.get("access_token_id").toString());
-
             // ustawiam format Timestamp
             String date = String.valueOf(claims.getExpiration().toInstant()).substring(0, 10);
             String time = String.valueOf(claims.getExpiration().toInstant()).substring(11, 19);
@@ -78,9 +82,14 @@ public class VerifyingDataFromClient extends State {
                     .findFirst()
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST)); // new IllegalStateException("Refresh Token with expiresAt=" + expiration + ", accessTokenID=" + accessTokenID + ", clientID=" + clientID + " does not exists (while VerifyingDataFromClient)"));
 
-            // sprawdzam czy refreshToken nie jest przeterminowany i czy nie jest revoked
-            if (!findRefreshToken.getExpiresAt().after(Timestamp.valueOf(LocalDateTime.now())) && !findRefreshToken.isRevoked()){
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            // sprawdzam czy refreshToken nie jest przeterminowany
+            if (!findRefreshToken.getExpiresAt().after(Timestamp.valueOf(LocalDateTime.now()))) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Expiration time passed");
+            }
+
+            // sprawdzam czy refreshToken nie jest revoked
+            if (!findRefreshToken.isRevoked()) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Refresh Token is revoked");
             }
 
             // usuwam były refreshtoken

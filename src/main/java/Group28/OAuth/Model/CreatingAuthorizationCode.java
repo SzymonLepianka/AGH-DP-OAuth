@@ -6,11 +6,9 @@ import Group28.OAuth.Domain.AuthCode;
 import Group28.OAuth.Domain.Permission;
 import Group28.OAuth.Domain.Scope;
 import Group28.OAuth.Domain.User;
-import javassist.tools.web.BadHttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.security.SecureRandom;
