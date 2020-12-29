@@ -1,8 +1,6 @@
 package Group28.OAuth.Controllers;
 
-import Group28.OAuth.Model.AuthenticatingClient;
-import Group28.OAuth.Model.Context;
-import Group28.OAuth.Model.Response;
+import Group28.OAuth.Model.*;
 import Group28.OAuth.View.APIView;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,7 +11,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 
@@ -23,24 +20,28 @@ public class APIController {
     private AuthenticatingClient model;
     private APIView view;
 
+    //TODO: odkomentowane wyrzuca błąd
 //    public APIController(AuthenticatingClient model, APIView view) {
 //        this.model = model;
 //        this.view = view;
 //    }
 
-    //TODO Bartek
-//    @GetMapping("/validateToken")
-//    public @ResponseBody
-//    String validateToken(@RequestParam String clientId, @RequestParam String scopes) throws SQLException {
-//        Map<String, String> params = new HashMap<>();
-//        params.put("clientID", clientId);
-//        params.put("scopes", scopes);
-//        Context context = new Context();
-//        context.changeState(new VerifyingDataFromClient());
-//        Response response = context.handle(params);
-//
-//        return "cos dla response";
-//    }
+    @GetMapping("/validateToken")
+    public @ResponseBody
+    String validateToken(@RequestParam String clientID, @RequestParam String accessToken) throws SQLException {
+
+        ValidateToken validateToken = new ValidateToken();
+        boolean response = validateToken.validateToken(Long.parseLong(clientID), accessToken);
+        System.out.println(response);
+        /* funkcja zwraca false gdy:
+            - minął expiration time
+            - nie ma tokenu o takich parametrach
+         */
+
+        //TODO view
+
+        return "odpowiedź czy token jest valid";
+    }
 
     @GetMapping("/createToken")
     public @ResponseBody
@@ -71,18 +72,39 @@ public class APIController {
         return null;
     }
 
+    @GetMapping("/revokeToken")
+    public @ResponseBody
+        String revokeToken(@RequestParam String clientID, @RequestParam String accessToken) throws SQLException {
 
-    //TODO Bartek
-//    @GetMapping("/revokeToken")
-//    public @ResponseBody
-//    String revokeToken() throws SQLException {
-//        return null;
-//    }
-//    @GetMapping("/revokeGrantType")
-//    public @ResponseBody
-//    String revokeGrantType() throws SQLException {
-//        return null;
-//    }
+        RevokeToken revokeToken = new RevokeToken();
+        boolean response = revokeToken.revokeToken(Long.parseLong(clientID), accessToken);
+        System.out.println(response);
+        /* funkcja zwraca true gdy udało się zrobić revoke
+           w przeciwnym przypadku wyrzuca Bad Request / IllegalStateException
+         */
+
+        //TODO view
+
+        return "odpowiedź czy token jest valid";
+    }
+
+    @GetMapping("/revokeGrantType")
+    public @ResponseBody
+    String revokeGrantType(@RequestParam String clientID, @RequestParam String authCode) throws SQLException {
+
+        RevokeGrantType revokeGrantType = new RevokeGrantType();
+        boolean response = revokeGrantType.revokeGrantType(Long.parseLong(clientID), authCode);
+        System.out.println(response);
+
+        /* funkcja zwraca true gdy udało się zrobić revoke
+           w przeciwnym przypadku wyrzuca Bad Request
+         */
+        //TODO view
+
+        return "odpowiedź z view";
+    }
+
+    //TODO
 //    @GetMapping("/getUserData")
 //    public @ResponseBody
 //    String getUserData() throws SQLException {
