@@ -1,4 +1,4 @@
-package Group28.OAuth.Model;
+package Group28.OAuth.Model.State;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;

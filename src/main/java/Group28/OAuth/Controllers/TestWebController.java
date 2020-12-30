@@ -1,14 +1,10 @@
 package Group28.OAuth.Controllers;
 
-import Group28.OAuth.Domain.AuthCode;
-import Group28.OAuth.Model.AuthenticatingClient;
-import Group28.OAuth.Model.Context;
-import Group28.OAuth.Model.VerifyingDataFromClient;
-import Group28.OAuth.Model.Response;
-import com.fasterxml.jackson.core.JsonFactoryBuilder;
+import Group28.OAuth.Model.State.AuthenticatingClient;
+import Group28.OAuth.Model.State.Context;
+import Group28.OAuth.Model.State.Response;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 

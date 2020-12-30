@@ -1,6 +1,9 @@
 package Group28.OAuth.Controllers;
 
 import Group28.OAuth.Model.*;
+import Group28.OAuth.Model.State.AuthenticatingClient;
+import Group28.OAuth.Model.State.Context;
+import Group28.OAuth.Model.State.Response;
 import Group28.OAuth.View.APIView;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
