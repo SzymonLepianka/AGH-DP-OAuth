@@ -1,7 +1,6 @@
 package Group28.OAuth.View;
 
-import Group28.OAuth.Domain.AccessToken;
-import Group28.OAuth.Model.Response;
+import Group28.OAuth.Model.State.Response;
 
 
 import javax.servlet.http.Cookie;

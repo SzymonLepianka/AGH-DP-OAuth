@@ -87,10 +87,10 @@ public class TestAPIController {
     public @ResponseBody String addClient() throws SQLException {
         ClientApp clientApp = new ClientApp();
         IDatabaseEditor db = DatabaseEditor.getInstance();
-        User user = db.getUsersAccessObject().readById(1L);
+        User user = db.getUsersAccessObject().readById(2L);
         clientApp.setUser(user);
-        clientApp.setAppSecret(20L);
-        clientApp.setRedirectURL("facebook.com");
+        clientApp.setAppSecret(9878654123L);
+        clientApp.setRedirectURL("onet.pl/xd");
         db.getAppsAccessObject().create(clientApp);
         return "new application added!";
     }

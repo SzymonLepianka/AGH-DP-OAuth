@@ -1,4 +1,4 @@
-package Group28.OAuth.Model;
+package Group28.OAuth.Model.State;
 
 public class Response {
 

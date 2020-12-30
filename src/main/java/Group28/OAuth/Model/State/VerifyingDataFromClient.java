@@ -1,4 +1,4 @@
-package Group28.OAuth.Model;
+package Group28.OAuth.Model.State;
 
 import Group28.OAuth.DAO.DatabaseEditor;
 import Group28.OAuth.DAO.IDatabaseEditor;
@@ -54,7 +54,11 @@ public class VerifyingDataFromClient extends State {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Auth Code is revoked");
             }
 
-            // jeśli żadne parametry w params nie pasuje wtedy -> Failure
+            // sprawdzam czy AuthCode nie jest expired
+            if (authCode.getExpiresAt().before(Timestamp.valueOf(LocalDateTime.now()))){
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Auth Code is expired");
+            }
+
         } else if (params.containsKey("refreshToken")) {
 
             // pobieram 'refreshToken' i 'clientID' z 'params'
@@ -80,7 +84,7 @@ public class VerifyingDataFromClient extends State {
             RefreshToken findRefreshToken = refreshTokens.stream()
                     .filter(rt -> accessTokenID.equals(rt.getAccessToken().getId()) && (expiration.equals(rt.getExpiresAt()) || Timestamp.valueOf(expiration.toLocalDateTime().plusSeconds(1)).equals(rt.getExpiresAt())) && clientID.equals(rt.getAccessToken().getClientApp().getId()))
                     .findFirst()
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST)); // new IllegalStateException("Refresh Token with expiresAt=" + expiration + ", accessTokenID=" + accessTokenID + ", clientID=" + clientID + " does not exists (while VerifyingDataFromClient)"));
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Refresh Token with expiresAt=" + expiration + ", accessTokenID=" + accessTokenID + ", clientID=" + clientID + " does not exists (while VerifyingDataFromClient)"));
 
             // sprawdzam czy refreshToken nie jest przeterminowany
             if (!findRefreshToken.getExpiresAt().after(Timestamp.valueOf(LocalDateTime.now()))) {
@@ -88,7 +92,7 @@ public class VerifyingDataFromClient extends State {
             }
 
             // sprawdzam czy refreshToken nie jest revoked
-            if (!findRefreshToken.isRevoked()) {
+            if (findRefreshToken.isRevoked()) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Refresh Token is revoked");
             }
 
@@ -96,6 +100,8 @@ public class VerifyingDataFromClient extends State {
             db.getRefreshTokensAccessObject().remove(findRefreshToken);
 
             context.changeState(new RefreshingAccessToken());
+
+            // jeśli żadne parametry w params nie pasuje wtedy -> Failure
         } else {
             context.changeState(new Failure());
         }
