@@ -36,9 +36,9 @@ public class CreatingAccessToken extends State {
             AuthCode authCode = codesFromDataBase.stream()
                     .filter(c -> code.equals(c.getContent()) && clientID.equals(c.getClientApp().getId()))
                     .findFirst()
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST)); // new IllegalStateException("Code " + code + " does not exists (while CreatingAccessToken)"));
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Code " + code + " does not exists (while CreatingAccessToken)"));
 
-            //ID użytkownika pryzpisanego do znalezionego AuthCode
+            //ID użytkownika przypisanego do znalezionego AuthCode
             userID = authCode.getUser().getId();
         }
 
@@ -73,6 +73,16 @@ public class CreatingAccessToken extends State {
         // jeśli w params nie na scopes -> dodaj (przypadek RefreshingAccessToken)
         if (!params.containsKey("scopes")) {
             params.put("scopes", scopes.toString());
+        }
+
+        //sprawdzam czy taki accesstoken już istnieje
+        List<AccessToken> accessTokensFromDataBase = db.getAccessTokensAccessObject().readAll();
+        AccessToken accessToken1 = accessTokensFromDataBase.stream()
+                .filter(at -> scopes.toString().equals(at.getScopes()) && clientID.equals(at.getClientApp().getId()) && userID.equals(at.getUser().getId()))
+                .findFirst()
+                .orElse(null);
+        if (accessToken1 != null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Access Token with scopes=" + scopes + ", clientID=" + clientID + ", userID=" + userID + " already exists");
         }
 
         // tworzę obiekt accessToken - zapisuję do niego parametry i zapisuję do bazy danych

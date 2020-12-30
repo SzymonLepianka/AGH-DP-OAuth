@@ -13,7 +13,7 @@ public class Failure extends State {
 
         System.out.println("Failure");
 
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Other failure (Failure)");
     }
 
     @Override

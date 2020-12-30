@@ -1,5 +1,6 @@
 package Group28.OAuth.Controllers;
 
+import Group28.OAuth.Domain.AuthCode;
 import Group28.OAuth.Model.State.AuthenticatingClient;
 import Group28.OAuth.Model.State.Context;
 import Group28.OAuth.Model.State.Response;
@@ -66,7 +67,7 @@ public class TestWebController {
         // zwóci coś
         // i to coś do return
 
-        return "tu będzie coś od view co zawróci klienta na jego URI z paramentrem code / albo kod o błędzie";
+        return "tu będzie coś od view co zawróci klienta na jego URI z paramentrem code / albo kod o błędzie ; code=" + ((AuthCode) response.content).getContent();
     }
 
     @GetMapping("/auth/tokenForCode")
@@ -80,7 +81,8 @@ public class TestWebController {
         Context context = new Context();
         context.changeState(new AuthenticatingClient());
         Response response = context.handle(params);
-        System.out.println(response.content.toString());
+        String[] accessAndRefresh = (String[]) response.content;
+        System.out.println(Arrays.toString(accessAndRefresh));
 
         //TODO: tu się wywoła view
 
