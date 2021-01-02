@@ -32,17 +32,15 @@ public class APIController {
 
         ValidateToken validateToken = new ValidateToken();
         boolean response = validateToken.validateToken(Long.parseLong(clientID), accessToken);
-        System.out.println(response);
+        String result = view.validToken(response);
         /* funkcja zwraca false gdy:
             - minął expiration time
             - nie ma tokenu o takich parametrach
          */
-
-        //TODO view
-
-        return "odpowiedź czy token jest valid";
+        return result;
     }
 
+    //TODO to chyba nie ma szansy działać
     @GetMapping("/createToken")
     public @ResponseBody
     String createToken(@RequestParam String clientId, @RequestParam String authCode, HttpServletResponse httpServletResponse) throws SQLException {
@@ -50,14 +48,16 @@ public class APIController {
         params.put("clientID", clientId);
         params.put("code", authCode);
         Context context = new Context();
+        context.changeState(new AuthenticatingClient());
         Response response = context.handle(params);
         // response.content to obiekt AuthCode
-        view.showToken(response, httpServletResponse);
+        view.createToken(response, httpServletResponse);
         return "ok";
     }
+
     @GetMapping("/refreshToken")
     public @ResponseBody
-    String refreshToken(@RequestParam String clientID, @RequestParam String refreshToken) throws SQLException {
+    String refreshToken(@RequestParam String clientID, @RequestParam String refreshToken, HttpServletResponse httpServletResponse) throws SQLException {
         Map<String, String> params = new HashMap<>();
         params.put("clientID", clientID);
         params.put("refreshToken", refreshToken);
@@ -65,11 +65,11 @@ public class APIController {
         Context context = new Context();
         context.changeState(new AuthenticatingClient());
         Response response = context.handle(params);
+        //wywolanie view - ustawienie ciastek
+        view.refreshToken(response, httpServletResponse);
+        //a to po co? /Gosia
         // response.content to String[] - [accessToken, refreshToken]
-
-        //TODO: tu się wywoła view
-
-        return null;
+        return "ok";
     }
 
     @GetMapping("/revokeToken")
@@ -82,10 +82,8 @@ public class APIController {
         /* funkcja zwraca true gdy udało się zrobić revoke
            w przeciwnym przypadku wyrzuca Bad Request / IllegalStateException
          */
-
-        //TODO view
-
-        return "odpowiedź czy token jest valid";
+        //sztuka dla sztuki
+        return view.revokeToken(response);
     }
 
     @GetMapping("/revokeGrantType")
@@ -99,12 +97,11 @@ public class APIController {
         /* funkcja zwraca true gdy udało się zrobić revoke
            w przeciwnym przypadku wyrzuca Bad Request
          */
-        //TODO view
-
-        return "odpowiedź z view";
+        return view.revokeGrantType(response);
     }
 
     //TODO
+    //??? \Gosia
 //    @GetMapping("/getUserData")
 //    public @ResponseBody
 //    String getUserData() throws SQLException {
