@@ -4,6 +4,7 @@ import Group28.OAuth.DAO.DatabaseEditor;
 import Group28.OAuth.DAO.IDatabaseEditor;
 import Group28.OAuth.Domain.ClientApp;
 import Group28.OAuth.Domain.User;
+import Group28.OAuth.Model.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -50,7 +51,7 @@ public class TestAPIController {
     //TODO: powinien być POST, ale mi nie działa ~Szymek
 
     @GetMapping("/users/add")
-    public @ResponseBody String addUser(@RequestParam Date birth_date,
+    public @ResponseBody String addUser(@RequestParam String birth_date,
                                         @RequestParam String email,
                                         @RequestParam String first_name,
                                         @RequestParam Boolean is_developer,
@@ -59,7 +60,8 @@ public class TestAPIController {
                                         @RequestParam String surname,
                                         @RequestParam String username) throws SQLException {
         User newUser = new User();
-        newUser.setBirthDate(birth_date);
+        var birth_dateSQL = Date.valueOf(birth_date);
+        newUser.setBirthDate(birth_dateSQL);
         newUser.setEmail(email);
         newUser.setFirstName(first_name);
         newUser.setDeveloper(is_developer);
@@ -93,5 +95,12 @@ public class TestAPIController {
         clientApp.setRedirectURL("onet.pl/xd");
         db.getAppsAccessObject().create(clientApp);
         return "new application added!";
+    }
+
+    @GetMapping("/authorizationTest")
+    public  @ResponseBody String authorizationTest() {
+        Authorization.Authorize();
+
+        return "ok";
     }
 }
