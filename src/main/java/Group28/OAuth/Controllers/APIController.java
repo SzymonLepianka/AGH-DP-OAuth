@@ -21,10 +21,12 @@ import java.util.Map;
 @Controller
 @RequestMapping("/api")
 public class APIController {
+    //never used (?)
     private AuthenticatingClient model;
     private APIView view;
 
     //TODO: odkomentowane wyrzuca błąd
+    //Nie mam pojęcia dlaczego, to tylko konstruktor /Gosia
 //    public APIController(AuthenticatingClient model, APIView view) {
 //        this.model = model;
 //        this.view = view;
@@ -44,7 +46,7 @@ public class APIController {
         return result;
     }
 
-    //TODO to chyba nie ma szansy działać
+    //TODO to chyba nie ma szansy działać \Gosia
     @GetMapping("/createToken")
     public @ResponseBody
     String createToken(@RequestParam String clientID, @RequestParam String authCode, HttpServletResponse httpServletResponse) throws SQLException {
@@ -101,15 +103,12 @@ public class APIController {
         /* funkcja zwraca true gdy udało się zrobić revoke
            w przeciwnym przypadku wyrzuca Bad Request
          */
-
-        //TODO view
-
-        return "odpowiedź z view";
+        return view.revokeGrantType(response);
     }
 
     @GetMapping("/getUserData")
     public @ResponseBody
-    String getUserData(@RequestParam String clientID, @RequestParam String accessToken) throws SQLException {
+    JSONObject getUserData(@RequestParam String clientID, @RequestParam String accessToken) throws SQLException {
 
         GetUserData getUserData = new GetUserData();
         JSONObject userData = getUserData.getUserData(Long.parseLong(clientID), accessToken);
@@ -120,9 +119,6 @@ public class APIController {
            scopes muszą być zdefinowane w bazie: user_birthdate, user_email, user_firstname, user_phonenumber, user_surname, user_username
            w przeciwnym przypadku wyrzuca Bad Request
          */
-
-        //TODO view
-
-        return "odpowiedź z view";
+        return userData;
     }
 }
