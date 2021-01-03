@@ -24,6 +24,7 @@ public class RevokeGrantType {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Auth Code does not exist in data base");
         }
 
+        // robię update AuthCode w bazie danych
         authCodeFound.setRevoked(true);
         db.getAuthCodesAccessObject().update(authCodeFound);
 

@@ -1,4 +1,4 @@
-package Group28.OAuth.Model;
+package Group28.OAuth.Model.State;
 
 /*Provides and interface to client to perform some action
 and delegates state specific requests to the  subclass

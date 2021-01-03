@@ -43,6 +43,14 @@ public class ValidateToken {
                 .findFirst()
                 .orElse(null);
 
-        return accessTokenFound != null;
+        // sprawdzam czy token nie jest revoked
+        if (accessTokenFound != null){
+            {
+                return !accessTokenFound.isRevoked();
+            }
+        }
+        else {
+            return false;
+        }
     }
 }

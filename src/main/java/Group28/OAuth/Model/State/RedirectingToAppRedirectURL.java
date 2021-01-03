@@ -1,4 +1,4 @@
-package Group28.OAuth.Model;
+package Group28.OAuth.Model.State;
 
 import Group28.OAuth.DAO.DatabaseEditor;
 import Group28.OAuth.DAO.IDatabaseEditor;
@@ -39,7 +39,7 @@ public class RedirectingToAppRedirectURL extends State {
             return new Response(redirectURL, authCode);
         }
         // przypadek AuthCode -> AccessToken
-        if (params.containsKey("createdRefreshToken") && params.containsKey("createdAccessToken")) {
+        else if (params.containsKey("createdRefreshToken") && params.containsKey("createdAccessToken")) {
 
             // wyciągam AccessToken i RefreshToken z params
             String createdRefreshToken = params.get("createdRefreshToken");

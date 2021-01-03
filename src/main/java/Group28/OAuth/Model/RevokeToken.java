@@ -17,11 +17,11 @@ import java.util.List;
 public class RevokeToken {
     public boolean revokeToken(Long clientID, String accessToken) throws SQLException {
 
-        // czytam z danych danych appSecret clienta z danym clientID
+        // czytam z bazy danych appSecret clienta z danym clientID
         IDatabaseEditor db = DatabaseEditor.getInstance();
         Long appSecret = db.getAppsAccessObject().readById(clientID).getAppSecret();
 
-        //dekoduję z otrzymanego tokenu issuedAt, expiration, scopes i subject(userID)
+        //dekoduję z otrzymanego tokenu issuedAt, expiration, scopes i subject (czyli userID)
         TokenDecoder tokenDecoder = new TokenDecoder();
         Claims claims = tokenDecoder.decodeToken(accessToken, appSecret.toString());
         String scopes = (String) claims.get("scopes");
