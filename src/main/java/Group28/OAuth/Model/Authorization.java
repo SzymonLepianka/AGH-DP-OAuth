@@ -12,6 +12,8 @@ import java.sql.SQLException;
 
 public class Authorization {
 
+    // TODO Call Authorize in endpoints!
+
     public static void Authorize(HttpServletResponse httpServletResponse, String clientID) throws ResponseStatusException, SQLException {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         var accessTokenCookie = WebUtils.getCookie(request, "AccessToken");

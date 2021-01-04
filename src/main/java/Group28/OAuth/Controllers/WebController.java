@@ -1,5 +1,6 @@
 package Group28.OAuth.Controllers;
 
+import Group28.OAuth.Model.Authorization;
 import Group28.OAuth.Model.LogInUser;
 import Group28.OAuth.View.WebView;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +22,17 @@ public class WebController {
     private PasswordEncoder passwordEncoder;
 
     @GetMapping("/login")
-    public String loginForm() {
-        return "loginForm";
+    public String loginForm(HttpServletResponse httpServletResponse) {
+        try {
+            Authorization.Authorize(httpServletResponse, "1");
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        } catch (ResponseStatusException responseStatusException) {
+            if (responseStatusException.getStatus() == HttpStatus.UNAUTHORIZED) {
+                return "loginForm";
+            }
+        }
+        return "You are already logged in";
     }
 
     @PostMapping("/login")
