@@ -5,6 +5,7 @@ import Group28.OAuth.DAO.IDatabaseEditor;
 import Group28.OAuth.Domain.AccessToken;
 import Group28.OAuth.token.TokenDecoder;
 import io.jsonwebtoken.Claims;
+import org.apache.tomcat.util.codec.binary.Base64;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -14,6 +15,8 @@ import java.util.List;
 public class ValidateToken {
 
     public boolean validateToken(Long clientID, String accessToken) throws SQLException {
+
+        getClientID(accessToken);
 
         // czytam z danych danych appSecret clienta z danym clientID
         IDatabaseEditor db = DatabaseEditor.getInstance();
@@ -53,4 +56,20 @@ public class ValidateToken {
             return false;
         }
     }
+
+    public Long getClientID(String accessToken) {
+
+        String[] split_string = accessToken.split("\\.");
+//        String base64EncodedHeader = split_string[0];
+        String base64EncodedBody = split_string[1];
+//        String base64EncodedSignature = split_string[2];
+
+        Base64 base64Url = new Base64(true);
+        String body = new String(base64Url.decode(base64EncodedBody));
+        System.out.println("JWT Body : " + body);
+
+
+        return 0L;
+    }
+
 }
