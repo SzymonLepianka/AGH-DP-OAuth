@@ -4,12 +4,16 @@ import Group28.OAuth.DAO.DatabaseEditor;
 import Group28.OAuth.DAO.IDatabaseEditor;
 import Group28.OAuth.Domain.ClientApp;
 import Group28.OAuth.Domain.User;
+import Group28.OAuth.Model.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
+import javax.servlet.http.HttpServletResponse;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.List;
@@ -50,7 +54,7 @@ public class TestAPIController {
     //TODO: powinien być POST, ale mi nie działa ~Szymek
 
     @GetMapping("/users/add")
-    public @ResponseBody String addUser(@RequestParam Date birth_date,
+    public @ResponseBody String addUser(@RequestParam String birth_date,
                                         @RequestParam String email,
                                         @RequestParam String first_name,
                                         @RequestParam Boolean is_developer,
@@ -59,7 +63,8 @@ public class TestAPIController {
                                         @RequestParam String surname,
                                         @RequestParam String username) throws SQLException {
         User newUser = new User();
-        newUser.setBirthDate(birth_date);
+        var birth_dateSQL = Date.valueOf(birth_date);
+        newUser.setBirthDate(birth_dateSQL);
         newUser.setEmail(email);
         newUser.setFirstName(first_name);
         newUser.setDeveloper(is_developer);
@@ -93,5 +98,18 @@ public class TestAPIController {
         clientApp.setRedirectURL("onet.pl/xd");
         db.getAppsAccessObject().create(clientApp);
         return "new application added!";
+    }
+
+    @GetMapping("/authorizationTest")
+    public  @ResponseBody String authorizationTest(HttpServletResponse httpServletResponse, @RequestParam String clientID) throws SQLException {
+        try {
+            Authorization.Authorize(httpServletResponse, clientID);
+        } catch (ResponseStatusException exception) {
+            if (exception.getStatus() != HttpStatus.UNAUTHORIZED) {
+                exception.printStackTrace();
+            }
+        }
+
+        return "ok";
     }
 }

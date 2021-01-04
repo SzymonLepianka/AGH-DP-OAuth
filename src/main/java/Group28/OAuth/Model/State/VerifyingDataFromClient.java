@@ -23,7 +23,7 @@ public class VerifyingDataFromClient extends State {
         System.out.println("VerifyingDataFromClient");
 
         // jeśli params zawierają "scopes" wtedy CreatingAuthorizationCode
-        if (params.containsKey("scopes")) {
+        if (params.containsKey("scopes") && params.containsKey("userID")) {
             context.changeState(new CreatingAuthorizationCode());
 
             // jeśli params zawierają "code" wtedy ExchangingAuthorizationCodeForAccessToken

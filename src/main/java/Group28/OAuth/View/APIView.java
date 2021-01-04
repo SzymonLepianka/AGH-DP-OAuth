@@ -2,13 +2,14 @@ package Group28.OAuth.View;
 
 import Group28.OAuth.Model.State.Response;
 
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 
 public class APIView {
-    public void showToken(Response response, HttpServletResponse httpServletResponse){
+    public void createToken(Response response, HttpServletResponse httpServletResponse){
         if(response.content instanceof List){
             var list = (List<String>) response.content;
             Cookie cookieAccessToken = new Cookie("AccessToken", list.get(0));
@@ -17,11 +18,9 @@ public class APIView {
             httpServletResponse.addCookie(cookieRefreshToken);
         }
     }
-<<<<<<< Updated upstream
-=======
 
     public String validToken(boolean response){
-        if(response){
+        if(response == true){
             return "Token valid";
         }
         else{
@@ -37,7 +36,7 @@ public class APIView {
     }
 
     public String revokeToken(boolean response){
-        if(response){
+        if(response == true){
             return "Token revoked";
         }
         else{
@@ -45,12 +44,12 @@ public class APIView {
         }
     }
     public String revokeGrantType(boolean response){
-        if(response){
+        if(response == true){
             return "GrantType revoked";
         }
         else{
             return "GrantType not revoked";
         }
     }
->>>>>>> Stashed changes
+
 }

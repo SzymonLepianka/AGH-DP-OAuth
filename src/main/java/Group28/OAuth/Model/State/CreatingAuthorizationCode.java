@@ -27,26 +27,16 @@ public class CreatingAuthorizationCode extends State {
 
         Long clientID = Long.parseLong(params.get("clientID"));
 
-        //TODO: to się może sypnąć po zmienieniu typu logowania
-
-        // pobieram 'username' aktualnie zalogowanego użytkownika:
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String username;
-        if (principal instanceof UserDetails) {
-            username = ((UserDetails) principal).getUsername();
-        } else {
-            username = principal.toString();
-        }
-
-        if (username == null) {
-            throw new IllegalStateException("Username is null (while CreatingAuthorizationCode)");
-        }
-
         // pobieram z bazy obiekt User dla danego 'username'
         IDatabaseEditor db = DatabaseEditor.getInstance();
+        var user = db.getUsersAccessObject().readById(Long.parseLong(params.get("userID")));
+        if(user == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+        var username = user.getUsername();
         List<User> users = db.getUsersAccessObject().readAll();
         Group28.OAuth.Domain.User user1 = users.stream()
-                .filter(user -> username.equals(user.getUsername()))
+                .filter(x -> username.equals(x.getUsername()))
                 .findFirst()
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Student " + username + " does not exists (while creating auth code)"));
 
