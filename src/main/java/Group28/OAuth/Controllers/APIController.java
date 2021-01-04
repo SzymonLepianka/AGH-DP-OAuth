@@ -21,14 +21,27 @@ import java.util.Map;
 @Controller
 @RequestMapping("/api")
 public class APIController {
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
     private AuthenticatingClient model;
     private APIView view;
+    private Context context;
 
+<<<<<<< Updated upstream
     //TODO: odkomentowane wyrzuca błąd
 //    public APIController(AuthenticatingClient model, APIView view) {
 //        this.model = model;
 //        this.view = view;
 //    }
+=======
+    public APIController() {
+        this.model = new AuthenticatingClient();
+        this.view = new APIView();
+        this.context = new Context();
+    }
+>>>>>>> Stashed changes
 
     @GetMapping("/validateToken")
     public @ResponseBody
@@ -53,7 +66,13 @@ public class APIController {
         Map<String, String> params = new HashMap<>();
         params.put("clientID", clientID);
         params.put("code", authCode);
+<<<<<<< Updated upstream
         Context context = new Context();
+=======
+//        Context context = new Context();
+        context.changeState(new AuthenticatingClient());
+
+>>>>>>> Stashed changes
         Response response = context.handle(params);
         // response.content to obiekt AuthCode
 //        view.showToken(response, httpServletResponse);
@@ -67,7 +86,7 @@ public class APIController {
         params.put("clientID", clientID);
         params.put("refreshToken", refreshToken);
 
-        Context context = new Context();
+//        Context context = new Context();
         context.changeState(new AuthenticatingClient());
         Response response = context.handle(params);
         // response.content to String[] - [accessToken, refreshToken]
