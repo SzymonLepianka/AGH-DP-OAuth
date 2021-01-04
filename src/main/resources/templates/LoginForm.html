@@ -1,0 +1,23 @@
+<html>
+<head>
+</head>
+<body>
+<form method="POST" action="/web/login" > <!-- modelAttribute="employee" - co to? -->
+    <h1>Zaloguj się</h1>
+    <table>
+        <tr>
+            <td><label for="username">Username</label></td>
+            <td><input type="text" name="username" id="username"/></td>
+        </tr>
+        <tr>
+            <td><label for="password">Password</label></td>
+            <td><input type="password" name="password" id="password"/></td>
+        </tr>
+        <tr>
+            <input type="hidden" name="clientID" id="clientID" value="1"/>
+            <td><input type="submit" value="Loguj!"/></td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>

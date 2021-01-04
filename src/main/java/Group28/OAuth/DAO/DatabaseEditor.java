@@ -2,7 +2,6 @@ package Group28.OAuth.DAO;
 
 import Group28.OAuth.Domain.*;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
