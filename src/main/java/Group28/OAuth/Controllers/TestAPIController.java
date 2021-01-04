@@ -6,11 +6,14 @@ import Group28.OAuth.Domain.ClientApp;
 import Group28.OAuth.Domain.User;
 import Group28.OAuth.Model.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
+import javax.servlet.http.HttpServletResponse;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.List;
@@ -98,8 +101,14 @@ public class TestAPIController {
     }
 
     @GetMapping("/authorizationTest")
-    public  @ResponseBody String authorizationTest() {
-        Authorization.Authorize();
+    public  @ResponseBody String authorizationTest(HttpServletResponse httpServletResponse, @RequestParam String clientID) throws SQLException {
+        try {
+            Authorization.Authorize(httpServletResponse, clientID);
+        } catch (ResponseStatusException exception) {
+            if (exception.getStatus() != HttpStatus.UNAUTHORIZED) {
+                exception.printStackTrace();
+            }
+        }
 
         return "ok";
     }
