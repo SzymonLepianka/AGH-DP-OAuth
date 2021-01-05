@@ -77,6 +77,7 @@ public class APIController {
     @GetMapping("/refreshToken")
     public @ResponseBody
     String refreshToken(@RequestParam String clientID, @RequestParam String refreshToken, HttpServletResponse httpServletResponse) throws SQLException {
+        Authorization.Authorize(httpServletResponse);
         Map<String, String> params = new HashMap<>();
         params.put("clientID", clientID);
         params.put("refreshToken", refreshToken);
@@ -90,8 +91,18 @@ public class APIController {
 
     @GetMapping("/revokeToken")
     public @ResponseBody
-    String revokeToken(@RequestParam String clientID, @RequestParam String accessToken) throws SQLException {
+    String revokeToken(@RequestParam String clientID, @RequestParam String accessToken,  HttpServletResponse httpServletResponse) throws SQLException {
 
+        try {
+            Authorization.Authorize(httpServletResponse);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        } catch (ResponseStatusException responseStatusException) {
+            if (responseStatusException.getStatus() == HttpStatus.UNAUTHORIZED) {
+                httpServletResponse.addHeader("Location", "/web/login?clientID="+clientID);
+                httpServletResponse.setStatus(302);
+            }
+        }
         boolean response = RevokeToken.revokeToken(Long.parseLong(clientID), accessToken);
         System.out.println(response);
 
@@ -104,7 +115,19 @@ public class APIController {
 
     @GetMapping("/revokeGrantType")
     public @ResponseBody
-    String revokeGrantType(@RequestParam String clientID, @RequestParam String authCode) throws SQLException {
+    String revokeGrantType(@RequestParam String clientID, @RequestParam String authCode, HttpServletResponse httpServletResponse) throws SQLException {
+
+        try {
+            Authorization.Authorize(httpServletResponse);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        } catch (ResponseStatusException responseStatusException) {
+            if (responseStatusException.getStatus() == HttpStatus.UNAUTHORIZED) {
+                httpServletResponse.addHeader("Location", "/web/login?clientID="+clientID);
+                httpServletResponse.setStatus(302);
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+            }
+        }
 
         boolean response = RevokeGrantType.revokeGrantType(Long.parseLong(clientID), authCode);
         System.out.println(response);
@@ -117,7 +140,18 @@ public class APIController {
 
     @GetMapping("/getUserData")
     public @ResponseBody
-    JSONObject getUserData(@RequestParam String clientID, @RequestParam String accessToken) throws SQLException {
+    JSONObject getUserData(@RequestParam String clientID, @RequestParam String accessToken, HttpServletResponse httpServletResponse) throws SQLException {
+
+        try {
+            Authorization.Authorize(httpServletResponse);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        } catch (ResponseStatusException responseStatusException) {
+            if (responseStatusException.getStatus() == HttpStatus.UNAUTHORIZED) {
+                httpServletResponse.addHeader("Location", "/web/login?clientID="+clientID);
+                httpServletResponse.setStatus(302);
+            }
+        }
 
         JSONObject userData = GetUserData.getUserData(Long.parseLong(clientID), accessToken);
         System.out.println(userData);

@@ -75,17 +75,17 @@ public class CreatingAccessToken extends State {
             params.put("scopes", scopes.toString());
         }
 
-        //sprawdzam czy taki accesstoken już istnieje
-        List<AccessToken> accessTokensFromDataBase = db.getAccessTokensAccessObject().readAll();
-        AccessToken accessToken1 = accessTokensFromDataBase.stream()
-                .filter(at -> scopes.toString().equals(at.getScopes()) &&
-                        clientID.equals(at.getClientApp().getId()) &&
-                        userID.equals(at.getUser().getId()) && at.getExpiresAt().after(Timestamp.valueOf(LocalDateTime.now())))
-                .findFirst()
-                .orElse(null);
-        if (accessToken1 != null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Access Token with scopes=" + scopes + ", clientID=" + clientID + ", userID=" + userID + " already exists");
-        }
+//        //sprawdzam czy taki accesstoken już istnieje
+//        List<AccessToken> accessTokensFromDataBase = db.getAccessTokensAccessObject().readAll();
+//        AccessToken accessToken1 = accessTokensFromDataBase.stream()
+//                .filter(at -> scopes.toString().equals(at.getScopes()) &&
+//                        clientID.equals(at.getClientApp().getId()) &&
+//                        userID.equals(at.getUser().getId()) && at.getExpiresAt().after(Timestamp.valueOf(LocalDateTime.now())))
+//                .findFirst()
+//                .orElse(null);
+//        if (accessToken1 != null) {
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Access Token with scopes=" + scopes + ", clientID=" + clientID + ", userID=" + userID + " already exists");
+//        }
 
         // tworzę obiekt accessToken - zapisuję do niego parametry i zapisuję do bazy danych
         AccessToken accessToken = new AccessToken();

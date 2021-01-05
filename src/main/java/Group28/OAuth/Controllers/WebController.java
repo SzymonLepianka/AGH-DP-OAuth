@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -22,7 +23,9 @@ public class WebController {
     private PasswordEncoder passwordEncoder;
 
     @GetMapping("/login")
-    public String loginForm(HttpServletResponse httpServletResponse) {
+    public String loginForm(@RequestParam String clientID, HttpServletResponse httpServletResponse, Model model) {
+        model.addAttribute("clientID", clientID);
+
         try {
             Authorization.Authorize(httpServletResponse);
         } catch (SQLException throwables) {
