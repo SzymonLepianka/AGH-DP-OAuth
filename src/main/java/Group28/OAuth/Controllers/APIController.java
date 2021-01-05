@@ -6,11 +6,13 @@ import Group28.OAuth.Model.State.Context;
 import Group28.OAuth.Model.State.Response;
 import Group28.OAuth.View.APIView;
 import org.json.JSONObject;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
@@ -21,44 +23,55 @@ import java.util.Map;
 @Controller
 @RequestMapping("/api")
 public class APIController {
-    //never used (?)
-    private AuthenticatingClient model;
-    private APIView view;
 
-    //TODO: odkomentowane wyrzuca błąd
-    //Nie mam pojęcia dlaczego, to tylko konstruktor /Gosia
-//    public APIController(AuthenticatingClient model, APIView view) {
-//        this.model = model;
-//        this.view = view;
-//    }
+    private final Context context;
+    private final APIView view;
+
+    //TODO: czy to ma być tak? ~Szymek
+    public APIController() {
+        this.context = new Context();
+        this.view = new APIView();
+    }
 
     @GetMapping("/validateToken")
     public @ResponseBody
-    String validateToken(@RequestParam String clientID, @RequestParam String accessToken) throws SQLException {
+    String validateToken(@RequestParam String accessToken) throws SQLException {
 
-        ValidateToken validateToken = new ValidateToken();
-        boolean response = validateToken.validateToken(Long.parseLong(clientID), accessToken);
-        String result = view.validToken(response);
+        boolean response = ValidateToken.validateToken(accessToken);
         /* funkcja zwraca false gdy:
             - minął expiration time
             - nie ma tokenu o takich parametrach
          */
-        return result;
+        return view.validToken(response);
     }
 
-    //TODO to chyba nie ma szansy działać \Gosia
-    @GetMapping("/createToken")
+    @GetMapping(value = "/createToken", params = "authCode")
     public @ResponseBody
     String createToken(@RequestParam String clientID, @RequestParam String authCode, HttpServletResponse httpServletResponse) throws SQLException {
         Map<String, String> params = new HashMap<>();
         params.put("clientID", clientID);
         params.put("code", authCode);
-        Context context = new Context();
         context.changeState(new AuthenticatingClient());
         Response response = context.handle(params);
         // response.content to obiekt AuthCode
         view.createToken(response, httpServletResponse);
         return "ok";
+    }
+
+    @GetMapping("/createToken")
+    public @ResponseBody
+    String createTokenFromCookie(@RequestParam String clientID, HttpServletResponse httpServletResponse) throws SQLException {
+        String authCode="";
+        try {
+            authCode = CheckAuthCodeCookie.Check(httpServletResponse);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        } catch (ResponseStatusException responseStatusException) {
+            if (responseStatusException.getStatus() == HttpStatus.UNAUTHORIZED) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "AuthCode cookie is not set");
+            }
+        }
+        return createToken(clientID, authCode, httpServletResponse);
     }
 
     @GetMapping("/refreshToken")
@@ -67,13 +80,10 @@ public class APIController {
         Map<String, String> params = new HashMap<>();
         params.put("clientID", clientID);
         params.put("refreshToken", refreshToken);
-
-        Context context = new Context();
         context.changeState(new AuthenticatingClient());
         Response response = context.handle(params);
         //wywolanie view - ustawienie ciastek
         view.refreshToken(response, httpServletResponse);
-        //a to po co? /Gosia
         // response.content to String[] - [accessToken, refreshToken]
         return "ok";
     }
@@ -82,13 +92,13 @@ public class APIController {
     public @ResponseBody
     String revokeToken(@RequestParam String clientID, @RequestParam String accessToken) throws SQLException {
 
-        RevokeToken revokeToken = new RevokeToken();
-        boolean response = revokeToken.revokeToken(Long.parseLong(clientID), accessToken);
+        boolean response = RevokeToken.revokeToken(Long.parseLong(clientID), accessToken);
         System.out.println(response);
+
         /* funkcja zwraca true gdy udało się zrobić revoke
            w przeciwnym przypadku wyrzuca Bad Request / IllegalStateException
          */
-        //sztuka dla sztuki
+
         return view.revokeToken(response);
     }
 
@@ -96,8 +106,7 @@ public class APIController {
     public @ResponseBody
     String revokeGrantType(@RequestParam String clientID, @RequestParam String authCode) throws SQLException {
 
-        RevokeGrantType revokeGrantType = new RevokeGrantType();
-        boolean response = revokeGrantType.revokeGrantType(Long.parseLong(clientID), authCode);
+        boolean response = RevokeGrantType.revokeGrantType(Long.parseLong(clientID), authCode);
         System.out.println(response);
 
         /* funkcja zwraca true gdy udało się zrobić revoke
@@ -110,8 +119,7 @@ public class APIController {
     public @ResponseBody
     JSONObject getUserData(@RequestParam String clientID, @RequestParam String accessToken) throws SQLException {
 
-        GetUserData getUserData = new GetUserData();
-        JSONObject userData = getUserData.getUserData(Long.parseLong(clientID), accessToken);
+        JSONObject userData = GetUserData.getUserData(Long.parseLong(clientID), accessToken);
         System.out.println(userData);
 
         /* funkcja zwraca JSONObject gdy accessToken jest valid
