@@ -5,9 +5,6 @@ import Group28.OAuth.DAO.IDatabaseEditor;
 import Group28.OAuth.Domain.Permission;
 import Group28.OAuth.Model.State.Context;
 import Group28.OAuth.Model.State.Response;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.server.ResponseStatusException;
@@ -18,7 +15,7 @@ import java.util.stream.Collectors;
 
 public class LogInUser {
 
-    // TODO Maybe make interface for model classes
+    // TODO MAYBE make interface for model classes
     public static Response handle(String username, String password, String clientID, PasswordEncoder passwordEncoder) throws SQLException {
         IDatabaseEditor dbEditor = DatabaseEditor.getInstance();
         var users = dbEditor.getUsersAccessObject().readAll();
@@ -26,7 +23,7 @@ public class LogInUser {
         if (user.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
-        if(!passwordEncoder.matches(password, user.get().getPassword())) {
+        if (!passwordEncoder.matches(password, user.get().getPassword())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
         var context = new Context();
@@ -52,10 +49,10 @@ public class LogInUser {
             }
         }
         var scopesBuilder = new StringBuilder();
-        for(var permission : userPermissionForApp) {
+        for (var permission : userPermissionForApp) {
             scopesBuilder.append(permission.getScope().getName()).append(",");
         }
-        scopesBuilder.delete(scopesBuilder.length()-1, scopesBuilder.length());
+        scopesBuilder.delete(scopesBuilder.length() - 1, scopesBuilder.length());
         params.put("scopes", scopesBuilder.toString());
         params.put("userID", String.valueOf(user.get().getId()));
         return context.handle(params);

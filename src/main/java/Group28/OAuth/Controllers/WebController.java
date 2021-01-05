@@ -24,7 +24,7 @@ public class WebController {
     @GetMapping("/login")
     public String loginForm(HttpServletResponse httpServletResponse) {
         try {
-            Authorization.Authorize(httpServletResponse, "1");
+            Authorization.Authorize(httpServletResponse);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         } catch (ResponseStatusException responseStatusException) {
@@ -32,7 +32,7 @@ public class WebController {
                 return "loginForm";
             }
         }
-        return "You are already logged in";
+        return "AlreadyLogged";
     }
 
     @PostMapping("/login")
@@ -45,5 +45,4 @@ public class WebController {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 }

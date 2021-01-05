@@ -17,18 +17,6 @@ import java.util.Map;
 @Controller
 public class TestWebController {
 
-//    @RequestMapping("/auth/code/success")
-//    @ResponseBody
-//    public String veryficationClientIdSuccess() throws SQLException {
-//        return "zalogowano i stworzono auth code (hope so)";
-//    }
-//
-//    @RequestMapping("/auth/code/failure")
-//    @ResponseBody
-//    public String veryficationClientIdFailure() {
-//        return "to kiedyś przekieruje do redirect URL klienta z kodem failure";
-//    }
-
     @GetMapping("/auth/code")
     @ResponseBody
     public String authCode(@RequestParam String clientID, @RequestParam String scopes) throws SQLException {
@@ -53,9 +41,7 @@ public class TestWebController {
 //        System.out.println(response.redirect);
 
         // TODO:
-        // tu się wywoła viewS
-
-        // jestesmy we view:
+        // tu się wywoła view:
 //        AuthCode authCode;
 //        if (response.content instanceof AuthCode){
 //            authCode = (AuthCode) response.content;

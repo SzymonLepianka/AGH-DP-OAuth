@@ -58,11 +58,11 @@ public class AccessTokenBuilder {
         //Let's set the JWT Claims
         JwtBuilder builder = Jwts.builder()
                 .setHeader(createHead())
+                .claim("clientID", clientID)
                 .setIssuedAt(createdAt)
                 .setExpiration(expiresAt)
                 .claim("scopes", scopes)
                 .setSubject(userID)
-//                .claim("clientID", "clientID_example")
                 .signWith(SignatureAlgorithm.HS256, signingKey);
 
         //Builds the JWT and serializes it to a compact, URL-safe string

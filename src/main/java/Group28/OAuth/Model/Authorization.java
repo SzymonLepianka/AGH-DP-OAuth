@@ -14,20 +14,19 @@ public class Authorization {
 
     // TODO Call Authorize in endpoints!
 
-    public static void Authorize(HttpServletResponse httpServletResponse, String clientID) throws ResponseStatusException, SQLException {
+    public static void Authorize(HttpServletResponse httpServletResponse) throws ResponseStatusException, SQLException {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         var accessTokenCookie = WebUtils.getCookie(request, "AccessToken");
         if(accessTokenCookie == null) {
-            httpServletResponse.addHeader("Location", "/web/login");
-            httpServletResponse.setStatus(302);
+//            httpServletResponse.addHeader("Location", "/web/login");
+//            httpServletResponse.setStatus(302);
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
-        if(accessTokenCookie != null) {
+        else {
             var accessToken = accessTokenCookie.getValue();
-            var validator = new ValidateToken();
-            if (!validator.validateToken(Long.parseLong(clientID), accessToken)) {
-                httpServletResponse.addHeader("Location", "/web/login");
-                httpServletResponse.setStatus(302);
+            if (!ValidateToken.validateToken(accessToken)) {
+//                httpServletResponse.addHeader("Location", "/web/login");
+//                httpServletResponse.setStatus(302);
                 throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
             }
         }

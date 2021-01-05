@@ -7,7 +7,6 @@ import Group28.OAuth.Domain.User;
 import Group28.OAuth.Model.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -35,21 +34,6 @@ public class TestAPIController {
         }
         return sb.toString();
     }
-
-//    @PostMapping("/users/add")
-//    public @ResponseBody String addUser() throws SQLException {
-//
-//        User newUser = new User();
-//        newUser.setFirstName("Bartek2");
-//        newUser.setSurname("Kregielewski2");
-//        newUser.setEmail("alex@o2.xd");
-//        newUser.setPassword("TEST123");
-//        newUser.setDeveloper(false);
-//        IDatabaseEditor db = DatabaseEditor.getInstance();
-//        db.getUsersAccessObject().create(newUser);
-//
-//        return "ok";
-//    }
 
     //TODO: powinien być POST, ale mi nie działa ~Szymek
 
@@ -101,15 +85,14 @@ public class TestAPIController {
     }
 
     @GetMapping("/authorizationTest")
-    public  @ResponseBody String authorizationTest(HttpServletResponse httpServletResponse, @RequestParam String clientID) throws SQLException {
+    public  @ResponseBody String authorizationTest(HttpServletResponse httpServletResponse) throws SQLException {
         try {
-            Authorization.Authorize(httpServletResponse, clientID);
+            Authorization.Authorize(httpServletResponse);
         } catch (ResponseStatusException exception) {
             if (exception.getStatus() != HttpStatus.UNAUTHORIZED) {
                 exception.printStackTrace();
             }
         }
-
         return "ok";
     }
 }

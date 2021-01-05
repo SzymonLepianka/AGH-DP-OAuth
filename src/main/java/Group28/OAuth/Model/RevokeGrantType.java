@@ -10,7 +10,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class RevokeGrantType {
-    public boolean revokeGrantType(Long clientID, String authCode) throws SQLException {
+    public static boolean revokeGrantType(Long clientID, String authCode) throws SQLException {
 
         // pobieram z bazy danych AuthCodes i szukam przekazanego 'authCode'
         IDatabaseEditor db = DatabaseEditor.getInstance();
