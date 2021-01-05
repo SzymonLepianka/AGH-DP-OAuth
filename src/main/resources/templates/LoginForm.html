@@ -1,9 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <title>Login page</title></head>
 <body>
-<form method="POST" action="/web/login"> <!-- modelAttribute="employee" - co to? -->
+<form method="POST" action="/web/login">
     <h1>Zaloguj się</h1>
     <table>
         <tr>
@@ -15,7 +14,7 @@
             <td><input type="password" name="password" id="password"/></td>
         </tr>
         <tr>
-            <!--            <input type="hidden" name="clientID" id="clientID" value="1"/>-->
+            <input type="hidden" name="clientID" id="clientID" th:value="${clientID}"/>
             <td><input type="submit" value="Loguj!"/></td>
         </tr>
     </table>
