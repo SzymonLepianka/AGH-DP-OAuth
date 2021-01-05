@@ -12,14 +12,14 @@ import java.sql.SQLException;
 
 public class GetUserData {
 
-    public JSONObject getUserData(Long clientID, String accessToken) throws SQLException {
+    public static JSONObject getUserData(Long clientID, String accessToken) throws SQLException {
 
         // tworzę JSONObject (zostanie zwrócony)
         JSONObject userData = new JSONObject();
 
         // waliduję token
         ValidateToken validateToken = new ValidateToken();
-        if (!validateToken.validateToken(clientID, accessToken)){
+        if (!validateToken.validateToken(accessToken)){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid Access Token");
         }
 

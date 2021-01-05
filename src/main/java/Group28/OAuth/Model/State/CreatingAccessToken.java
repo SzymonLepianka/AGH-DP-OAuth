@@ -78,7 +78,9 @@ public class CreatingAccessToken extends State {
         //sprawdzam czy taki accesstoken już istnieje
         List<AccessToken> accessTokensFromDataBase = db.getAccessTokensAccessObject().readAll();
         AccessToken accessToken1 = accessTokensFromDataBase.stream()
-                .filter(at -> scopes.toString().equals(at.getScopes()) && clientID.equals(at.getClientApp().getId()) && userID.equals(at.getUser().getId()))
+                .filter(at -> scopes.toString().equals(at.getScopes()) &&
+                        clientID.equals(at.getClientApp().getId()) &&
+                        userID.equals(at.getUser().getId()) && at.getExpiresAt().after(Timestamp.valueOf(LocalDateTime.now())))
                 .findFirst()
                 .orElse(null);
         if (accessToken1 != null) {

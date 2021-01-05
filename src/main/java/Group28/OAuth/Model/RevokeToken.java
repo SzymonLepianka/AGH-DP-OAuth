@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class RevokeToken {
-    public boolean revokeToken(Long clientID, String accessToken) throws SQLException {
+    public static boolean revokeToken(Long clientID, String accessToken) throws SQLException {
 
         // czytam z bazy danych appSecret clienta z danym clientID
         IDatabaseEditor db = DatabaseEditor.getInstance();

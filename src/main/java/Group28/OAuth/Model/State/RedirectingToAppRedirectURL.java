@@ -5,6 +5,7 @@ import Group28.OAuth.DAO.IDatabaseEditor;
 import Group28.OAuth.Domain.AuthCode;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -45,8 +46,12 @@ public class RedirectingToAppRedirectURL extends State {
             String createdRefreshToken = params.get("createdRefreshToken");
             String createdAccessToken = params.get("createdAccessToken");
 
+            //tworzę zwracany obiekt Response
+            ArrayList<String> response = new ArrayList<>();
+            response.add(createdAccessToken);
+            response.add(createdRefreshToken);
             // zwracam obiekt Response z pobranym redirectURL i accesstoken+refreshtoken
-            return new Response(redirectURL, new String[]{createdAccessToken, createdRefreshToken});
+            return new Response(redirectURL, response);
         }
 
         // gdy nic się nie dopasowało zmienam stan na failure

@@ -6,6 +6,8 @@ import Group28.OAuth.Domain.AccessToken;
 import Group28.OAuth.token.TokenDecoder;
 import io.jsonwebtoken.Claims;
 import org.apache.tomcat.util.codec.binary.Base64;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -14,9 +16,9 @@ import java.util.List;
 
 public class ValidateToken {
 
-    public boolean validateToken(Long clientID, String accessToken) throws SQLException {
+    public static boolean validateToken(String accessToken) throws SQLException {
 
-        getClientID(accessToken);
+        Long clientID = getClientID(accessToken);
 
         // czytam z danych danych appSecret clienta z danym clientID
         IDatabaseEditor db = DatabaseEditor.getInstance();
@@ -57,19 +59,18 @@ public class ValidateToken {
         }
     }
 
-    public Long getClientID(String accessToken) {
+    private static Long getClientID(String accessToken) {
 
         String[] split_string = accessToken.split("\\.");
-//        String base64EncodedHeader = split_string[0];
         String base64EncodedBody = split_string[1];
-//        String base64EncodedSignature = split_string[2];
 
         Base64 base64Url = new Base64(true);
         String body = new String(base64Url.decode(base64EncodedBody));
-        System.out.println("JWT Body : " + body);
 
-
-        return 0L;
+        String[] split = body.split(",");
+        if (!split[0].startsWith("clientID", 2)){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Access Token should have 'clientID' instead of " + split[0].substring(2,10));
+        }
+        return Long.parseLong(split[0].substring(12));
     }
-
 }
