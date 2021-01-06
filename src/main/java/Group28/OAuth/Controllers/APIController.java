@@ -55,7 +55,7 @@ public class APIController {
         Response response = context.handle(params);
         // response.content to obiekt AuthCode
         view.createToken(response, httpServletResponse);
-        return "ok";
+        return "Token was created successfully";
     }
 
     @GetMapping("/createToken")
@@ -86,7 +86,7 @@ public class APIController {
         //wywolanie view - ustawienie ciastek
         view.refreshToken(response, httpServletResponse);
         // response.content to String[] - [accessToken, refreshToken]
-        return "ok";
+        return "Token was refreshed successfully";
     }
 
     @GetMapping("/revokeToken")
@@ -123,9 +123,8 @@ public class APIController {
             throwables.printStackTrace();
         } catch (ResponseStatusException responseStatusException) {
             if (responseStatusException.getStatus() == HttpStatus.UNAUTHORIZED) {
-                httpServletResponse.addHeader("Location", "/web/login?clientID="+clientID);
+                httpServletResponse.addHeader("Location", "/web/login?clientID=" + clientID);
                 httpServletResponse.setStatus(302);
-                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
             }
         }
 
@@ -140,7 +139,7 @@ public class APIController {
 
     @GetMapping("/getUserData")
     public @ResponseBody
-    JSONObject getUserData(@RequestParam String clientID, @RequestParam String accessToken, HttpServletResponse httpServletResponse) throws SQLException {
+    String getUserData(@RequestParam String clientID, @RequestParam String accessToken, HttpServletResponse httpServletResponse) throws SQLException {
 
         try {
             Authorization.Authorize(httpServletResponse);
@@ -161,6 +160,6 @@ public class APIController {
            scopes muszą być zdefinowane w bazie: user_birthdate, user_email, user_firstname, user_phonenumber, user_surname, user_username
            w przeciwnym przypadku wyrzuca Bad Request
          */
-        return userData;
+        return userData.toString();
     }
 }

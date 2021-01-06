@@ -7,8 +7,6 @@ import Group28.OAuth.Domain.Permission;
 import Group28.OAuth.Domain.Scope;
 import Group28.OAuth.Domain.User;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.security.SecureRandom;
