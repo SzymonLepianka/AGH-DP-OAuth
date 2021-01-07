@@ -22,9 +22,25 @@ public class WebController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @GetMapping("/login")
-    public String loginForm(@RequestParam String clientID, HttpServletResponse httpServletResponse, Model model) {
+    @GetMapping(value = "/login", params = "clientID")
+    public String loginFormWithClientID(@RequestParam String clientID, HttpServletResponse httpServletResponse, Model model) {
         model.addAttribute("clientID", clientID);
+
+        try {
+            Authorization.Authorize(httpServletResponse);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        } catch (ResponseStatusException responseStatusException) {
+            if (responseStatusException.getStatus() == HttpStatus.UNAUTHORIZED) {
+                return "loginForm";
+            }
+        }
+        return "AlreadyLogged";
+    }
+
+    @GetMapping("/login")
+    public String loginForm(HttpServletResponse httpServletResponse, Model model) {
+        model.addAttribute("clientID", 1);
 
         try {
             Authorization.Authorize(httpServletResponse);
