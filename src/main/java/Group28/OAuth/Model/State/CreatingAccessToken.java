@@ -62,7 +62,7 @@ public class CreatingAccessToken extends State {
                 String name = permission.getScope().getName();
                 // sprawdzam czy danego scope już nie przypisałem
                 if (!scopes.toString().contains(name)) {
-                    if (!scopes.isEmpty()) {
+                    if (!scopes.toString().equals("")) {
                         scopes.append(",");
                     }
                     scopes.append(name);
