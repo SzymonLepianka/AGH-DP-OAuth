@@ -19,10 +19,6 @@ public class TokenDecoder {
         }catch (Exception e){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "JWT signature does not match locally computed signature.");
         }
-
-
-
-
     }
 
 }

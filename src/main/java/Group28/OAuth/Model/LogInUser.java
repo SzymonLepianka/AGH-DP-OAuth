@@ -21,10 +21,10 @@ public class LogInUser {
         var users = dbEditor.getUsersAccessObject().readAll();
         var user = users.stream().filter(x -> x.getUsername().equals(username)).findFirst();
         if (user.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User " + username + " does not exist in the database (LogInUser)");
         }
         if (!passwordEncoder.matches(password, user.get().getPassword())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The password is incorrect (LogInUser)");
         }
         var context = new Context();
         var params = new HashMap<String, String>();

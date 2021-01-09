@@ -4,8 +4,19 @@ plugins {
 	id 'java'
 }
 
+
 repositories {
 	mavenCentral()
+}
+
+jar {
+	manifest {
+		attributes 'Main-Class': 'Group28.OAuth.OAuthApplication'
+	}
+
+	from {
+		configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+	}
 }
 
 dependencies {
