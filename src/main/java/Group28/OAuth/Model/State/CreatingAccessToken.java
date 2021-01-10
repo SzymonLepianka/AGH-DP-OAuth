@@ -98,11 +98,14 @@ public class CreatingAccessToken extends State {
         accessToken.setUpdatedAt(createdAt);
         db.getAccessTokensAccessObject().create(accessToken);
 
-        // czytam z danych danych appSecret clienta z danym clientID
+        // czytam z danych appSecret clienta z danym clientID
         Long appSecret = db.getAppsAccessObject().readById(clientID).getAppSecret();
 
+        // czytam z danych username z danym userID
+        String username = db.getUsersAccessObject().readById(userID).getUsername();
+
         // buduję accessToken
-        AccessTokenBuilder accessTokenBuilder = new AccessTokenBuilder(createdAt, expiresAt, scopes.toString(), clientID, userID, appSecret);
+        AccessTokenBuilder accessTokenBuilder = new AccessTokenBuilder(createdAt, expiresAt, scopes.toString(), clientID, userID, username, appSecret);
         String createdAccessToken = accessTokenBuilder.generateToken();
         System.out.println("Created Access Token: " + createdAccessToken);
 

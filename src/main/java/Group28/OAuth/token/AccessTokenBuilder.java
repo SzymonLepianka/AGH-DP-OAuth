@@ -17,14 +17,16 @@ public class AccessTokenBuilder {
     String scopes;
     Long clientID;
     String userID;
+    String username;
 
-    public AccessTokenBuilder(Timestamp createdAt, Timestamp expiresAt, String scopes, Long clientID, Long userID, Long appSecret) {
+    public AccessTokenBuilder(Timestamp createdAt, Timestamp expiresAt, String scopes, Long clientID, Long userID, String username, Long appSecret) {
         this.createdAt = createdAt;
         this.expiresAt = expiresAt;
         this.scopes = scopes;
         this.clientID = clientID;
         this.userID = String.valueOf(userID);
         this.secretKey = String.valueOf(appSecret);
+        this.username = username;
     }
 
     @Override
@@ -63,6 +65,7 @@ public class AccessTokenBuilder {
                 .setExpiration(expiresAt)
                 .claim("scopes", scopes)
                 .setSubject(userID)
+                .claim("username", username)
                 .signWith(SignatureAlgorithm.HS256, signingKey);
 
         //Builds the JWT and serializes it to a compact, URL-safe string
