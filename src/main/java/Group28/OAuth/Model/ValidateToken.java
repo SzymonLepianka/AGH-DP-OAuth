@@ -68,9 +68,21 @@ public class ValidateToken {
         String body = new String(base64Url.decode(base64EncodedBody));
 
         String[] split = body.split(",");
+
         if (!split[0].startsWith("clientID", 2)){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Access Token should have 'clientID' instead of " + split[0].substring(2,10));
         }
+
+// KODZIK dający expiresAt
+//        if (split[2].startsWith("exp", 1)){
+//            long expiresAt = Long.parseLong(split[2].substring(6));
+//            System.out.println(expiresAt);
+//            // System.currentTimeMillis() / 1000L - obecny czas (ilość sekund od 1970 roku)
+//        }
+//        else{
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Access Token should have 'exp' instead of " + split[2].substring(1,4));
+//        }
+
         return Long.parseLong(split[0].substring(12));
     }
 }

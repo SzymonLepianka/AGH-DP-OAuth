@@ -35,8 +35,6 @@ public class TestAPIController {
         return sb.toString();
     }
 
-    //TODO: powinien być POST, ale mi nie działa ~Szymek
-
     @GetMapping("/users/add")
     public @ResponseBody String addUser(@RequestParam String birth_date,
                                         @RequestParam String email,
