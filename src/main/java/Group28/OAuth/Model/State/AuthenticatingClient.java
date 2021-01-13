@@ -37,7 +37,7 @@ public class AuthenticatingClient extends State {
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Client with clientID=" + params.get("clientID") + " does not exist");
         }
-        // wywołuję VerifyingDataFromClient w przypadku gdy powodzenia
+        // wywołuję VerifyingDataFromClient w przypadku powodzenia
         return context.handle(params);
     }
 

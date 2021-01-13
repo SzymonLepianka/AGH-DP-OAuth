@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 public class LogInUser {
 
-    // TODO MAYBE make interface for model classes
+
     public static Response handle(String username, String password, String clientID, PasswordEncoder passwordEncoder) throws SQLException {
         IDatabaseEditor dbEditor = DatabaseEditor.getInstance();
         var users = dbEditor.getUsersAccessObject().readAll();

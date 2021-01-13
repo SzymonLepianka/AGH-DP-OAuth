@@ -27,7 +27,7 @@ public class APIController {
     private final Context context;
     private final APIView view;
 
-    //TODO: czy to ma być tak? ~Szymek
+
     public APIController() {
         this.context = new Context();
         this.view = new APIView();
@@ -83,9 +83,7 @@ public class APIController {
         params.put("refreshToken", refreshToken);
         context.changeState(new AuthenticatingClient());
         Response response = context.handle(params);
-        //wywolanie view - ustawienie ciastek
         view.refreshToken(response, httpServletResponse);
-        // response.content to String[] - [accessToken, refreshToken]
         return "Token was refreshed successfully";
     }
 

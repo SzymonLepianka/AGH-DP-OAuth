@@ -40,7 +40,7 @@ public class TestWebController {
 //        System.out.println(authCode.getContent());
 //        System.out.println(response.redirect);
 
-        // TODO:
+
         // tu się wywoła view:
 //        AuthCode authCode;
 //        if (response.content instanceof AuthCode){
