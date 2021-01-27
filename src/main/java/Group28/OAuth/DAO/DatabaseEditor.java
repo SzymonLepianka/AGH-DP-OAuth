@@ -7,7 +7,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-//TODO Properties are hardwired, find a way to use @Value
 public class DatabaseEditor implements IDatabaseEditor {
     @Value("${spring.datasource.url}")
     private String databaseUrl = "jdbc:mysql://localhost:3306/oauth_db?serverTimezone=Europe/Warsaw";
@@ -53,7 +52,6 @@ public class DatabaseEditor implements IDatabaseEditor {
         return DatabaseEditor.instance;
     }
 
-    //TODO Leave it that way?
     public void finalize() {
         try {
             this.databaseConnection.close();
