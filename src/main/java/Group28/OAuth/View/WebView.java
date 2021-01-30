@@ -13,6 +13,6 @@ public class WebView {
         var cookieAuthCode = new Cookie("AuthCode", authCode.getContent());
         cookieAuthCode.setPath("/");
         httpServletResponse.addCookie(cookieAuthCode);
-        return "Ok";
+        return "AlreadyLogged";
     }
 }

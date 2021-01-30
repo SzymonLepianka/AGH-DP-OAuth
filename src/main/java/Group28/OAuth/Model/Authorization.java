@@ -16,20 +16,34 @@ public class Authorization {
 
     public static void Authorize(HttpServletResponse httpServletResponse) throws ResponseStatusException, SQLException {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-        var accessTokenCookie = WebUtils.getCookie(request, "AccessToken");
-        if(accessTokenCookie == null) {
-//            httpServletResponse.addHeader("Location", "/web/login");
-//            httpServletResponse.setStatus(302);
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
-        }
-        else {
-            var accessToken = accessTokenCookie.getValue();
-            if (!ValidateToken.validateToken(accessToken)) {
-//                httpServletResponse.addHeader("Location", "/web/login");
-//                httpServletResponse.setStatus(302);
-                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+        var cookies = request.getCookies();
+        if (cookies != null) {
+            for(var cookie : cookies) {
+                if(cookie.getName().startsWith("AccessToken")) {
+                    if (ValidateToken.validateToken(cookie.getValue())) {
+                        return;
+                    }
+                }
+
             }
         }
+        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+    }
+
+    public static void Authorize(HttpServletResponse httpServletResponse, String clientID) throws ResponseStatusException, SQLException {
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        var cookies = request.getCookies();
+        if (cookies != null) {
+            for(var cookie : cookies) {
+                if(cookie.getName().equals("AccessToken" + clientID)) {
+                    if (ValidateToken.validateToken(cookie.getValue())) {
+                        return;
+                    }
+                }
+
+            }
+        }
+        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
     }
 
 }

@@ -8,9 +8,10 @@ import java.util.List;
 
 
 public class APIView {
-    public void createToken(Response response, HttpServletResponse httpServletResponse) {
+    public void createToken(Response response, HttpServletResponse httpServletResponse, String clientID) {
         if (response.content instanceof List) {
-            setTokenCookie(response, httpServletResponse);
+            setTokenCookie(response, httpServletResponse, clientID);
+            removeAuthCodeCookie(httpServletResponse);
         } else {
             throw new IllegalStateException("response.content isn't instanceof List (thrown in APIView.createToken)");
         }
@@ -24,9 +25,9 @@ public class APIView {
         }
     }
 
-    public void refreshToken(Response response, HttpServletResponse httpServletResponse) {
+    public void refreshToken(Response response, HttpServletResponse httpServletResponse, String clientID) {
         if (response.content instanceof List) {
-            setTokenCookie(response, httpServletResponse);
+            setTokenCookie(response, httpServletResponse, clientID);
         } else {
             throw new IllegalStateException("response.content isn't instanceof List (thrown in APIView.refreshToken)");
         }
@@ -48,15 +49,22 @@ public class APIView {
         }
     }
 
-    private void setTokenCookie(Response response, HttpServletResponse httpServletResponse) {
+    private void setTokenCookie(Response response, HttpServletResponse httpServletResponse, String clientID) {
         if (response.content instanceof List) {
             var list = (List<String>) response.content;
-            Cookie cookieAccessToken = new Cookie("AccessToken", list.get(0));
+            Cookie cookieAccessToken = new Cookie("AccessToken" + clientID, list.get(0));
             cookieAccessToken.setPath("/");
-            Cookie cookieRefreshToken = new Cookie("RefreshToken", list.get(1));
+            Cookie cookieRefreshToken = new Cookie("RefreshToken" + clientID, list.get(1));
             cookieRefreshToken.setPath("/");
             httpServletResponse.addCookie(cookieAccessToken);
             httpServletResponse.addCookie(cookieRefreshToken);
         }
+    }
+
+    private void removeAuthCodeCookie(HttpServletResponse httpServletResponse) {
+        Cookie cookieAuthCode = new Cookie("AuthCode", "");
+        cookieAuthCode.setPath("/");
+        cookieAuthCode.setMaxAge(0);
+        httpServletResponse.addCookie(cookieAuthCode);
     }
 }
