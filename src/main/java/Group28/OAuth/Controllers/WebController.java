@@ -11,19 +11,21 @@ import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.WebUtils;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
 
 @Controller
-@RequestMapping(path="/web", produces = MediaType.TEXT_HTML_VALUE)
+@RequestMapping(path = "/web", produces = MediaType.TEXT_HTML_VALUE)
 public class WebController {
 
     @Autowired
@@ -48,7 +50,6 @@ public class WebController {
     @GetMapping(value = "/login", params = "clientID")
     public String loginFormWithClientID(@RequestParam String clientID, HttpServletResponse httpServletResponse, Model model) {
         model.addAttribute("clientID", clientID);
-
         try {
             Authorization.Authorize(httpServletResponse);
         } catch (SQLException throwables) {
@@ -61,9 +62,9 @@ public class WebController {
         try {
             HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
             var accessTokenCookie = WebUtils.getCookie(request, "AccessToken" + clientID);
-            if (accessTokenCookie == null) {
+            if (accessTokenCookie == null || !ValidateToken.validateToken(accessTokenCookie.getValue())) {
                 var cookies = request.getCookies();
-                for(var cookie : cookies) {
+                for (var cookie : cookies) {
                     if (cookie.getName().startsWith("AccessToken") && ValidateToken.validateToken(cookie.getValue())) {
                         var modelResponse = LogInUser.handle(cookie.getValue(), clientID, passwordEncoder);
                         return WebView.LoginView(modelResponse, httpServletResponse);
@@ -97,9 +98,10 @@ public class WebController {
             var accessTokenCookie = WebUtils.getCookie(request, "AccessToken" + clientID);
             if (accessTokenCookie == null) {
                 var cookies = request.getCookies();
-                for(var cookie : cookies) {
+                for (var cookie : cookies) {
                     if (cookie.getName().startsWith("AccessToken") && ValidateToken.validateToken(cookie.getValue())) {
                         var modelResponse = LogInUser.handle(cookie.getValue(), clientID, passwordEncoder);
+                        System.out.println(modelResponse.content);
                         return WebView.LoginView(modelResponse, httpServletResponse);
                     }
                 }
@@ -113,7 +115,7 @@ public class WebController {
         }
     }
 
-    @PostMapping(value = "/login", params = "clientID")
+    @PostMapping(value = "/login", params ="clientID")
     public String handleLogin(@RequestParam String clientID, @RequestParam String username, @RequestParam String password, HttpServletResponse httpServletResponse) {
         try {
             var modelResponse = LogInUser.handle(username, password, clientID, passwordEncoder);
