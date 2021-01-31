@@ -45,11 +45,11 @@ public class LogInUser {
         TokenDecoder tokenDecoder = new TokenDecoder();
         Claims claims = tokenDecoder.decodeToken(accessToken, appSecret.toString());
         Long userID = Long.parseLong(claims.getSubject());
-        return  userID;
+        return userID;
     }
 
 
-    public static Response handle(String accessToken, String clientID, PasswordEncoder passwordEncoder) throws  SQLException {
+    public static Response handle(String accessToken, String clientID, PasswordEncoder passwordEncoder) throws SQLException {
         var userID = getUserIDFromToken(accessToken);
 
         IDatabaseEditor dbEditor = DatabaseEditor.getInstance();
