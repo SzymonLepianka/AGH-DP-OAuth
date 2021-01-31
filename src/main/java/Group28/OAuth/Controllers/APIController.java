@@ -82,7 +82,7 @@ public class APIController {
     @GetMapping("/createToken")
     public @ResponseBody
     String createTokenFromCookie(@RequestParam String clientID, HttpServletResponse httpServletResponse) throws SQLException {
-        String authCode="";
+        String authCode = "";
         try {
             authCode = CheckAuthCodeCookie.Check(httpServletResponse);
         } catch (SQLException throwables) {
@@ -110,7 +110,7 @@ public class APIController {
 
     @GetMapping("/revokeToken")
     public @ResponseBody
-    String revokeToken(@RequestParam String clientID, @RequestParam String accessToken,  HttpServletResponse httpServletResponse) throws SQLException {
+    String revokeToken(@RequestParam String clientID, @RequestParam String accessToken, HttpServletResponse httpServletResponse) throws SQLException {
 
         try {
             Authorization.Authorize(httpServletResponse, clientID);
@@ -148,16 +148,15 @@ public class APIController {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         var cookies = request.getCookies();
         if (cookies != null) {
-            for(var cookie : cookies) {
-                if(cookie.getName().startsWith("AccessToken")) {
+            for (var cookie : cookies) {
+                if (cookie.getName().startsWith("AccessToken")) {
                     var accessToken = cookie.getValue();
                     var clientIDForAccessToken = getClientID(accessToken);
-                    boolean response = RevokeToken.revokeToken(Long.parseLong(clientIDForAccessToken), accessToken);
+                    RevokeToken.revokeToken(Long.parseLong(clientIDForAccessToken), accessToken);
                 }
             }
         }
-
-        return view.revokeToken(true);
+        return view.revokeAllTokens(true);
     }
 
     @GetMapping("/revokeGrantType")
@@ -180,6 +179,7 @@ public class APIController {
         /* funkcja zwraca true gdy udało się zrobić revoke
            w przeciwnym przypadku wyrzuca Bad Request
          */
+
         return view.revokeGrantType(response);
     }
 
@@ -196,6 +196,7 @@ public class APIController {
                 throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Cannot get user data");
             }
         }
+
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         var accessTokenCookie = WebUtils.getCookie(request, "AccessToken" + clientID);
         var accessToken = accessTokenCookie.getValue();
@@ -207,6 +208,7 @@ public class APIController {
            scopes muszą być zdefinowane w bazie: user_birthdate, user_email, user_firstname, user_phonenumber, user_surname, user_username
            w przeciwnym przypadku wyrzuca Bad Request
          */
+
         return userData.toString();
     }
 
@@ -232,6 +234,7 @@ public class APIController {
            scopes muszą być zdefinowane w bazie: user_birthdate, user_email, user_firstname, user_phonenumber, user_surname, user_username
            w przeciwnym przypadku wyrzuca Bad Request
          */
+
         return userData.toString();
     }
 }

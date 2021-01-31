@@ -41,6 +41,14 @@ public class APIView {
         }
     }
 
+    public String revokeAllTokens(boolean response) {
+        if (response) {
+            return "Access Tokens have been revoked successfully";
+        } else {
+            return "Unable to revoke Access Tokens";
+        }
+    }
+
     public String revokeGrantType(boolean response) {
         if (response) {
             return "GrantType has been revoked successfully";
